@@ -14,9 +14,9 @@ public partial class Player : CharacterBody2D
 
 	public override void _Ready()
 	{
-		head = GetNode("head") as Node2D;
-		body = GetNode("body") as Node2D;
-		hand = GetNode("hand") as Node2D;
+		head = GetNode("Head") as Node2D;
+		body = GetNode("Body") as Node2D;
+		hand = GetNode("Hand") as Node2D;
 		bulletScene = GD.Load<PackedScene>("res://Bullet.tscn");
 	}
 
@@ -38,6 +38,7 @@ public partial class Player : CharacterBody2D
 
 		LookVector = GetGlobalMousePosition() - head.GlobalPosition;
 		RotateHead();
+		RotateWeapon();
 		
 		if(Input.IsActionJustPressed("LMB")){
 			FireBullet();
@@ -46,23 +47,28 @@ public partial class Player : CharacterBody2D
 	}
 
 	private void RotateHead(){
-		
-		Vector2 lookDirection = GetGlobalMousePosition() - head.GlobalPosition;
-		double angle = Math.Atan2(lookDirection.Y,lookDirection.X);
-		if( lookDirection.X < 0 )
+
+		double angle = Math.Atan2(LookVector.Y,LookVector.X);
+		var headSprite = head.GetNode("Sprite2D") as Sprite2D;
+		if( LookVector.X < 0 )
 		{
-			head.FlipH = true;
 			angle += Math.PI;
 			angle = Math.Clamp(angle, -Math.PI/3, 5*Math.PI/3 );
 
 		} else {
 		
-			head.FlipH = false;
 			angle = Math.Clamp(angle, -Math.PI/3, Math.PI/3);
 		
 		}
-		
+		headSprite.FlipH = LookVector.X < 0;
 		head.Rotation = (float)angle;	
+	}
+
+	private void RotateWeapon()
+	{
+		double angle = Math.Atan2(LookVector.Y,LookVector.X);
+		hand.Scale = new Vector2(1,LookVector.X < 0 ? -1 : 1);
+		hand.Rotation = (float)angle;
 	}
 
 	private void FireBullet(){

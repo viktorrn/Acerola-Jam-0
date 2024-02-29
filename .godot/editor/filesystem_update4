@@ -1,5 +1,5 @@
 res://world.tscn
-res://sp1.tres
+res://Bullet.cs
+res://Enemy.cs
+res://Player.cs
 res://Enemy.tscn
-res://bullet.tscn
-res://Bullet.tscn

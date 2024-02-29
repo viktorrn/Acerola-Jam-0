@@ -1,0 +1,34 @@
+[gd_scene load_steps=5 format=3 uid="uid://codow0m2aua1l"]
+
+[ext_resource type="Script" path="res://Enemy.cs" id="1_jkp6s"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nfuiu"]
+region = Rect2(109, 146, 22, 17)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_332sc"]
+radius = 5.0
+height = 20.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s2wed"]
+radius = 12.0
+height = 26.0
+
+[node name="Enemy" type="CharacterBody2D"]
+script = ExtResource("1_jkp6s")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-1, 0)
+texture = SubResource("AtlasTexture_nfuiu")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_332sc")
+
+[node name="HitBox" type="Area2D" parent="."]
+input_pickable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
+position = Vector2(0, -3)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_s2wed")

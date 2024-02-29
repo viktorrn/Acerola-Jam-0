@@ -1,0 +1,13 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1709245337
+Bullet.cs::CSharpScript::-1::1709225606::0::1::::<><>::
+bullet.tscn::PackedScene::6468518953500178983::1709245337::0::1::::<><>::res://Bullet.cs
+Enemy.cs::CSharpScript::-1::1709225685::0::1::::<><>::
+Enemy.tscn::PackedScene::5762568969794423039::1709245337::0::1::::<><>::res://Enemy.cs
+icon.svg::CompressedTexture2D::6076900814110741576::1709225641::1709225647::1::::<><>::
+Player.cs::CSharpScript::-1::1709245398::0::1::::<><>::
+README.md::TextFile::-1::1709225409::0::1::::<><>::
+sp1.tres::AtlasTexture::1398242167901645371::1709244987::0::1::::<><>::uid://i5a6pg8ggs8m::::res://SpriteSheet.png
+SpriteSheet.png::CompressedTexture2D::623498239963827558::1709244884::1709244886::1::::<><>::
+world.tscn::PackedScene::1988368319811303846::1709245337::0::1::::<><>::res://Player.cs<>uid://t6k3x6hbumyl::::res://sp1.tres
+Utils.cs::CSharpScript::-1::1709225434::0::1::::<><>::

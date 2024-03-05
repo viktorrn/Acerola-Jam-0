@@ -3,8 +3,9 @@ using System;
 
 public partial class BiteAttack : Area2D
 {
-	public float Force = 0;
+	public float Force = 80;
 	public Vector2 ForceDirection = Vector2.Zero;
+	private int Damage = 4;
 	public override void _Ready()
 	{
 		AddToGroup("Attack");
@@ -13,12 +14,7 @@ public partial class BiteAttack : Area2D
 	public int HitTarget(Node2D enemy)
 	{
 		GD.Print("Bite Attack");
-		return 5;
+		return Damage;
 	}
 
-	public float ApplyDamage(Vector2 forceDirection, float force)
-	{
-		GD.Print("Apply Damage");
-		return 0;
-	}
 }

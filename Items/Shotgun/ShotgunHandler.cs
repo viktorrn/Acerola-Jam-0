@@ -10,6 +10,8 @@ public partial class ShotgunHandler : Node2D
     [Export] public int BulletOffset = 30;
     [Export] public float FireRate = 0.4f;
     [Export] public float ReloadTime = 1.0f;
+
+    [Export] public float Spread = 0.05f;
     
 
     [Export] public int Damage = 4;
@@ -25,7 +27,7 @@ public partial class ShotgunHandler : Node2D
         double lookAngle = Math.Atan2(direction.Y,direction.X);
         for(int i = 0; i < 5; i++){
         
-            double angle = lookAngle + (i-2)*0.1;
+            double angle = lookAngle + (i-2)*Spread;
             
             Projectile bulletInstance = bulletScene.Instantiate() as Projectile;
             

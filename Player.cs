@@ -4,8 +4,8 @@ using System.Linq;
 
 public partial class Player : CharacterBody2D
 {
-	public const float Speed = 300.0f;
-	public const float BulletSpeed = 500.0f;
+	[Export] public const float Speed = 200.0f;
+	[Export] public const float Acceleration = 6.0f;
 	public Vector2 LookVector;
 
 	private PackedScene bulletScene;
@@ -123,7 +123,7 @@ public partial class Player : CharacterBody2D
 		velocity.Y = direction.Y * Speed;
 
 		velocity.Normalized();
-		Velocity = velocity;
+		Velocity = Velocity.Lerp(velocity, (float)deltaTime * Acceleration);
 		MoveAndSlide();
 		//var collisionData = MoveAndCollide(Velocity);
 
@@ -202,4 +202,10 @@ public partial class Player : CharacterBody2D
 				break;
 		}
 	}
+
+	public void ApplyDamage(Vector2 forceDirection, float force)
+	{
+		Velocity = forceDirection * force;
+	}
+
 }

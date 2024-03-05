@@ -1,7 +1,6 @@
-res://world.tscn
-res://sp1.tres
-res://Props/tileset.tres
 res://Enemy/Enemy.tscn
+res://Props/tileset.tres
+res://world.tscn
 res://Props/0_wall.tscn
 res://Player.tscn
 res://Items/Prompt.tscn
@@ -9,6 +8,8 @@ res://Items/Shotgun/Shotgun.tscn
 res://Items/Sniper/Sniper.tscn
 res://Items/Sniper/SniperBullet.tscn
 res://Items/Shotgun/Slug.tscn
+res://Enemy/BiteAttack.cs
+res://Enemy/Biter.cs
 res://Enemy/Enemy.cs
 res://Health.cs
 res://Items/BaseGun.cs
@@ -18,5 +19,3 @@ res://Items/SingelHitManager.cs
 res://Items/Sniper/SniperHandler.cs
 res://Player.cs
 res://Projectile.cs
-res://Enemy/Biter.cs
-res://Enemy/BiteAttack.cs

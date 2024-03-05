@@ -30,7 +30,8 @@ public partial class Projectile : CharacterBody2D
 		if(collision_data == null){
 			return;
 		}
-		if(collision_data.GetCollider() is StaticBody2D){
+		
+		if(collision_data.GetCollider() is TileMap){
 			QueueFree();
 		}		
 	}

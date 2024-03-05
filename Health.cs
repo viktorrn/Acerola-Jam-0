@@ -26,11 +26,11 @@ public partial class Health : Area2D
 
 	public void HandleAttack(Node body)
 	{
-		GD.Print(GetParent().Name, "    ", body.Name, "    ", body.IsInGroup("Attack"));	
+
 		if(body.IsInGroup("Attack"))
 		{
 			if(areaList.Contains(body as Area2D)){return;}
-			GD.Print("Health Hit");		
+			
 			int damage = (int)body?.Call("HitTarget",this);
 			GetParent().Call("ApplyDamage",body.Get("ForceDirection"),body.Get("Force"));
 			
@@ -50,6 +50,6 @@ public partial class Health : Area2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	private void RemoveArea(Area2D area)
 	{
-		areaList.Remove(area);
+		areaList?.Remove(area);
 	}
 }

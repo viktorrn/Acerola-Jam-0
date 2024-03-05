@@ -21,6 +21,7 @@ public partial class Enemy : CharacterBody2D
 
 	public bool InAttackState = false;
 	public bool AttackOnCooldown = false;
+	private bool LookingLeft = false;
 
 	[Export] public bool DebugDraw = true;
 
@@ -28,12 +29,19 @@ public partial class Enemy : CharacterBody2D
 
 	private NavigationAgent2D navAgent;
 
+
+	private Node2D spriteNode;
+
+	private AnimationPlayer animPlayer;
+
 	override public void _Ready()
 	{
 		Alive = true;
 		Player = GetTree().Root.GetNode("world").GetNode("Player") as CharacterBody2D;
 		TargetPosition = Position;
         navAgent = GetNode("NavAgent") as NavigationAgent2D;
+		spriteNode = GetNode("Sprite") as Node2D;
+		animPlayer = spriteNode.GetNode("AnimationPlayer") as AnimationPlayer;
 		
     }
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -50,9 +58,10 @@ public partial class Enemy : CharacterBody2D
 				
 		// check if we should stand still or not
 		Velocity = Velocity.Lerp(DeisredVelocity,2*FrameDelta);
-
-		KnockBack = KnockBack.Lerp(Vector2.Zero,2*FrameDelta);
+		
 		MoveAndSlide();
+		spriteNode.Scale = new Vector2( LookingLeft ? -1 : 1 , 1.0f);
+
 		//MoveAndCollide(Velocity * FrameDelta);
 		QueueRedraw();
 	}
@@ -68,7 +77,13 @@ public override void _Draw()
 
     public void AliveState()
 	{
-		if(InAttackState) return;
+		if(InAttackState) 
+		{
+		
+			LookingLeft = (Target.GlobalPosition - Position).X > 0;
+			
+			return;
+		}
 		if(TakeDamage)
 		{
 			StunnedState();
@@ -117,6 +132,7 @@ public override void _Draw()
 			
 			Vector2 direction = (TargetPosition - GlobalPosition).Normalized();
 			DeisredVelocity = direction * Speed * (1-Stunned);
+			LookingLeft = direction.X > 0;
 		}
 	}
 
@@ -124,6 +140,7 @@ public override void _Draw()
 	{
 		InAttackState = true;
 		AttackOnCooldown = true;
+		animPlayer.Play("Attack");
 		GetNode("Handler")?.Call("Attack",Target);
 	
 	}
@@ -157,7 +174,7 @@ public override void _Draw()
 
 		TakeDamage = true;
 		Velocity += forceDirection*force;
-		KnockBack += forceDirection*force;
+		Velocity = Velocity.Clamp(Vector2.Zero,new Vector2(300.0f,300.0f));
 		Target = Player;
 	}
 }

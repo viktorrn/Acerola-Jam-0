@@ -90,6 +90,7 @@ Reload={
 2d_physics/layer_3="Attacks"
 2d_physics/layer_4="Cover"
 2d_physics/layer_5="EnemyAttack"
+2d_physics/layer_6="EnemyBodies"
 
 [navigation]
 

@@ -43,7 +43,7 @@ height = 38.0
 z_index = -1
 y_sort_enabled = true
 collision_layer = 0
-collision_mask = 13
+collision_mask = 45
 script = ExtResource("1_su24c")
 
 [node name="Legs" type="Node2D" parent="."]

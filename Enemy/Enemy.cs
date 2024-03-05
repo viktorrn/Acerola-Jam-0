@@ -34,6 +34,8 @@ public partial class Enemy : CharacterBody2D
 
 	private AnimationPlayer animPlayer;
 
+	private float AngleToReach;
+
 	override public void _Ready()
 	{
 		Alive = true;
@@ -57,22 +59,22 @@ public partial class Enemy : CharacterBody2D
 		}
 				
 		// check if we should stand still or not
-		Velocity = Velocity.Lerp(DeisredVelocity,2*FrameDelta);
+		Velocity = Velocity.Lerp(DeisredVelocity,4*FrameDelta);
 		
 		MoveAndSlide();
+		//MoveAndCollide(Velocity * FrameDelta);
 		spriteNode.Scale = new Vector2( LookingLeft ? -1 : 1 , 1.0f);
 
-		//MoveAndCollide(Velocity * FrameDelta);
-		QueueRedraw();
 	}
 
 	public override void _Process(double delta)
 	{
+		QueueRedraw();
 	}
 
 public override void _Draw()
 {
-	DrawCircle(Position,10, new Color(1,0,0,0.01f));
+	DrawCircle(Vector2.Zero, AttackRange, new Color(1,0,0,0.1f));
 }
 
     public void AliveState()
@@ -102,9 +104,10 @@ public override void _Draw()
 	{
 		if(Target == null)
 		{
+			
 			if(Position.DistanceTo(Player.GlobalPosition) < TargetRange)
 			{
-				navAgent.TargetPosition = Player.GlobalPosition;
+				AngleToReach = (Player.GlobalPosition - Position).Angle() + (float)Math.PI/2 - GD.Randf()*(float)Math.PI;
 				Target = Player;
 			}
 		} else {
@@ -126,11 +129,13 @@ public override void _Draw()
 			DeisredVelocity = Vector2.Zero;
 			Velocity = Vector2.Zero;
 		} else {
-			navAgent.TargetPosition = Target.GlobalPosition;
+			float angle = (Player.GlobalPosition - Position).Angle();
+			navAgent.TargetPosition = Player.GlobalPosition - new Vector2(AttackRange,0).Rotated(angle+AngleToReach);
+			
 			TargetPosition = navAgent.GetNextPathPosition();
 			
-			
 			Vector2 direction = (TargetPosition - GlobalPosition).Normalized();
+			
 			DeisredVelocity = direction * Speed * (1-Stunned);
 			LookingLeft = direction.X > 0;
 		}
@@ -149,6 +154,7 @@ public override void _Draw()
 	{
 	
 		InAttackState = false;
+		Target = null;
 	}
 
 	public void AttackCooldownComplete()

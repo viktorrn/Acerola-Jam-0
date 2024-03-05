@@ -31,11 +31,10 @@ atlas = ExtResource("2_5b2uh")
 region = Rect2(109, 146, 22, 17)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_04gl8"]
-radius = 4.0
+radius = 7.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s2wed"]
 radius = 11.0
-height = 28.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gmdpc"]
 radius = 8.06226
@@ -45,8 +44,8 @@ atlas = ExtResource("2_5b2uh")
 region = Rect2(64, 66, 14, 14)
 
 [node name="Enemy" type="CharacterBody2D"]
-collision_layer = 0
-collision_mask = 13
+collision_layer = 32
+collision_mask = 45
 script = ExtResource("1_1bity")
 
 [node name="Sprite" type="Node2D" parent="."]
@@ -62,11 +61,10 @@ libraries = {
 texture = SubResource("AtlasTexture_nfuiu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 5)
+position = Vector2(1, 5)
 shape = SubResource("CircleShape2D_04gl8")
 
 [node name="HurtBox" type="Area2D" parent="."]
-visible = false
 collision_layer = 0
 collision_mask = 4
 input_pickable = false
@@ -96,6 +94,7 @@ theme_override_colors/font_color = Color(0.831373, 0, 0.231373, 1)
 text = "X"
 
 [node name="NavAgent" type="NavigationAgent2D" parent="."]
+path_desired_distance = 32.0
 target_desired_distance = 16.0
 debug_enabled = true
 

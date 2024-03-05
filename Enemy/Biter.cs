@@ -5,6 +5,7 @@ public partial class Biter : Node2D
 {
 	private Area2D hitBox;
 	public int AttackRange = 40;
+	public int LunghRange = 220;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -35,6 +36,7 @@ public partial class Biter : Node2D
 		hitBox.Monitorable = true;
 		hitBox.Visible = true;
 		hitBox.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
+		GetParent<CharacterBody2D>().Velocity = direction * LunghRange;
 	}
 
 	public void AttackComplete()

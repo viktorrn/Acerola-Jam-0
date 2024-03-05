@@ -132,7 +132,7 @@ public partial class Player : CharacterBody2D
 
 	private void RotateHead(){
 
-		double angle = Math.Atan2(LookVector.Y,LookVector.X);
+		double angle = LookVector.Angle();
 
 		if( LookVector.X < 0 )
 		{

@@ -1,6 +1,6 @@
-res://Enemy/Enemy.tscn
-res://Props/tileset.tres
 res://world.tscn
+res://Props/tileset.tres
+res://Enemy/Enemy.tscn
 res://Props/0_wall.tscn
 res://Player.tscn
 res://Items/Prompt.tscn
@@ -8,6 +8,8 @@ res://Items/Shotgun/Shotgun.tscn
 res://Items/Sniper/Sniper.tscn
 res://Items/Sniper/SniperBullet.tscn
 res://Items/Shotgun/Slug.tscn
+res://starting_area.tscn
+res://CustomCursor.cs
 res://Enemy/BiteAttack.cs
 res://Enemy/Biter.cs
 res://Enemy/Enemy.cs
@@ -18,4 +20,6 @@ res://Items/Shotgun/ShotGunPelletRandomizer.cs
 res://Items/SingelHitManager.cs
 res://Items/Sniper/SniperHandler.cs
 res://Player.cs
+res://PlayerCamera.cs
 res://Projectile.cs
+res://sp1.tres

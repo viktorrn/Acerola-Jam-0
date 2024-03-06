@@ -50,4 +50,6 @@ offset_bottom = -17.0
 
 [node name="Handler" type="Node2D" parent="."]
 script = ExtResource("4_nip30")
+BulletSpeed = 2500.0
+bulletOffset = 56
 Damage = 25

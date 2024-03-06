@@ -29,13 +29,12 @@ public partial class Health : Area2D
 
 		if(body.IsInGroup("Attack"))
 		{
-			if(areaList.Contains(body as Area2D)){return;}
-			
 			int damage = (int)body?.Call("HitTarget",this);
+			
 			GetParent().Call("ApplyDamage",body.Get("ForceDirection"),body.Get("Force"));
 			
-			areaList.Add(body as Area2D);
-			GetTree().CreateTimer(0.5f).Timeout += () => RemoveArea(body as Area2D);
+			//areaList.Add(body as Area2D);
+			//GetTree().CreateTimer(0.2f).Timeout += () => RemoveArea(body as Area2D);
 
 			CurrentHealth -= damage;
 			if(CurrentHealth <= 0)

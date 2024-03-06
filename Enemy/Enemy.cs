@@ -3,7 +3,7 @@ using System;
 
 public partial class Enemy : CharacterBody2D
 {
-	public const float Speed = 200.0f;
+	public const float Speed = 130.0f;
 	private float Stunned = 1.0f;
 	private Area2D hitBox;
 
@@ -104,7 +104,6 @@ public override void _Draw()
 	{
 		if(Target == null)
 		{
-			
 			if(Position.DistanceTo(Player.GlobalPosition) < TargetRange)
 			{
 				AngleToReach = (Player.GlobalPosition - Position).Angle() + (float)Math.PI/2 - GD.Randf()*(float)Math.PI;
@@ -154,7 +153,7 @@ public override void _Draw()
 	{
 	
 		InAttackState = false;
-		Target = null;
+		AngleToReach = (Player.GlobalPosition - Position).Angle() + (float)Math.PI/2 - GD.Randf()*(float)Math.PI;
 	}
 
 	public void AttackCooldownComplete()
@@ -180,7 +179,7 @@ public override void _Draw()
 
 		TakeDamage = true;
 		Velocity += forceDirection*force;
-		Velocity = Velocity.Clamp(Vector2.Zero,new Vector2(300.0f,300.0f));
+		Velocity = Velocity.Length() > 200 ? Velocity.Normalized() * 200 : Velocity;
 		Target = Player;
 	}
 }

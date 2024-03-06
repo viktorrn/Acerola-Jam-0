@@ -12,10 +12,12 @@ public partial class BaseGun : CharacterBody2D
     public  int MagAmount = 0;
     private int WeaponType = 0; // 0 is primary, 1 is secondary, 3 is granade 
 
+    public int ADSRange = 10;
+
 
     public bool CanFire = true; 
     public bool IsReloading = false;
-    private Node2D Handler;
+    public Node2D Handler;
 
     private Control prompt;
 
@@ -31,6 +33,7 @@ public partial class BaseGun : CharacterBody2D
             
             MagAmount = (int)Handler.Get("MaxMagAmount");
             CurrentAmmo = (int)Handler.Get("MagSize");
+            ADSRange = (int)Handler.Get("ADSRange");
 
         }catch(Exception){
            GD.Print(this, "![OBS]!: GUN SEEM TO BE MISSING HANDLER NODE!");
@@ -92,4 +95,5 @@ public partial class BaseGun : CharacterBody2D
     {
         Visible = true;
     }
+
 }

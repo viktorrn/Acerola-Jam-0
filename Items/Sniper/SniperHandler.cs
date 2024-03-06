@@ -9,6 +9,8 @@ public partial class SniperHandler : Node2D
     [Export] public int bulletOffset = 30;
     [Export]public float FireRate = 0.8f;
     [Export]public float ReloadTime = 2.0f;
+
+    [Export] public float ADSRange = 200.0f;
     
 
     [Export]public int Damage = 10;
@@ -22,12 +24,12 @@ public partial class SniperHandler : Node2D
 
 	public void SpawnBullet(Vector2 position, Vector2 direction)
 	{	
-		double lookAngle = Math.Atan2(direction.Y,direction.X);
         
+        double angle = direction.Angle();
         Projectile bulletInstance = bulletScene.Instantiate() as Projectile;
         
-        bulletInstance.Position = position + new Vector2((float)Math.Cos(lookAngle),(float)Math.Sin(lookAngle))*30;
-        bulletInstance.Rotation = (float)lookAngle;
+        bulletInstance.Position = position + direction.Normalized()*bulletOffset;
+        bulletInstance.Rotation = (float)angle;
         bulletInstance.Speed = BulletSpeed;
         bulletInstance.Damage = Damage;
         bulletInstance.Force = Force;

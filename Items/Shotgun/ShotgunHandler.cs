@@ -11,7 +11,10 @@ public partial class ShotgunHandler : Node2D
     [Export] public float FireRate = 0.4f;
     [Export] public float ReloadTime = 1.0f;
 
-    [Export] public float Spread = 0.05f;
+    [Export] public float ADSRange = 100.0f;
+
+    [Export] public float Spread = 0.02f;
+
     
 
     [Export] public int Damage = 4;

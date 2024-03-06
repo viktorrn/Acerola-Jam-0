@@ -4,19 +4,41 @@ using System.Linq;
 
 public partial class Player : CharacterBody2D
 {
-	[Export] public const float Speed = 200.0f;
-	[Export] public const float Acceleration = 6.0f;
-	public Vector2 LookVector;
+	[ExportCategory("Camera")]
 
-	private PackedScene bulletScene;
+	[Export] public float CameraOffset = 40;
+	[Export] public float WeaponSnapSpeed = 6;
+
+
+	[ExportCategory("Movement")]
+	[Export] public float Speed = 200.0f;
+	[Export] public float Acceleration = 6.0f;
+
+	[Export] public float ADSSlowDown = 0.4f;
+
+
+	[ExportCategory("Health")]
+	[Export] public int Health = 4;
+	[Export] public int MaxHealth = 4; 
+
+
+	public Vector2 LookVector;
+	public Vector2 DesiredLookVector;
+
+	private System.Collections.Generic.List<CharacterBody2D> itemsInRange = new();
+
+
 	private Node2D head;
 	private Node2D body;
 	private Node2D hand;
 	private Node2D legs;
 	private CharacterBody2D weapon;
-	private Area2D hurtBox;
+	private Health hurtBox;
 	private Area2D pickUpBox;
-	private System.Collections.Generic.List<CharacterBody2D> itemsInRange = new();
+
+	
+
+	
 
 	private int itemIndex = 0;
 	private Godot.Collections.Array<CharacterBody2D> inventory;
@@ -26,13 +48,17 @@ public partial class Player : CharacterBody2D
 		body = GetNode("Body") as Node2D;
 		hand = GetNode("Hand") as Node2D;
 		legs = GetNode("Legs") as Node2D;
-		hurtBox = GetNode("Hurtbox") as Area2D;
+		hurtBox = GetNode("Hurtbox") as Health;
 		pickUpBox = GetNode("PickUp") as Area2D;
 		pickUpBox.BodyEntered += OnPickUpBoxBodyEntered;
 		pickUpBox.BodyExited += OnPickUpBoxExited;
 
+
+
+		hurtBox.SetUpHealth(MaxHealth);
 		inventory = new() { null, null, null, null };
 		
+	
 		
 	}
 
@@ -76,10 +102,33 @@ public partial class Player : CharacterBody2D
 			inventory[itemIndex]?.Call("Reload");
 		}
 		
+		DesiredLookVector = GetGlobalMousePosition() - head.GlobalPosition;
+		LookVector = LookVector.Lerp(DesiredLookVector, (float)delta*WeaponSnapSpeed);
+
+		
+		
+		if(inventory[itemIndex] == null) return;
+		
+		if(Input.IsActionJustPressed("LMB")){
+			try
+			{
+				Node2D weapon = hand.GetNode(inventory[itemIndex].Get("WeaponName").ToString()) as Node2D;
+				int result = (int)inventory[itemIndex]?.Call("FireBullet",weapon.GlobalPosition,LookVector);
+				if(result == 0)
+				{
+				GD.Print("Out of ammo");
+				}
+			}
+			catch(Exception e)
+			{
+				
+			}
+		}
     }
 
 	private void DropCurrentHeldWeapon(int index){
 		if(inventory[index] is null) return;
+		inventory[index].GlobalPosition = GlobalPosition;;
 		inventory[index]?.Call("Drop");
 		inventory[index] = null;
 	}
@@ -87,48 +136,31 @@ public partial class Player : CharacterBody2D
     // Get the gravity from the project settings to be synced with RigidBody nodes.
     public override void _PhysicsProcess(double deltaTime)
 	{
-		if(inventory[itemIndex] != null)
-		{
-			inventory[itemIndex].Position = hand.GlobalPosition;
-		}
+		
 
-		LookVector = GetGlobalMousePosition() - head.GlobalPosition;
 		RotateHead();
-		RotateWeapon();
-
-		if(Input.IsActionJustPressed("LMB")){
-			try
-			{
-			int result = (int)inventory[itemIndex]?.Call("FireBullet",head.GlobalPosition,LookVector);
-			if(result == 0)
-			{
-				GD.Print("Out of ammo");
-			}
-			}
-			catch(Exception e)
-			{
-				
-			}
-
-		}
-
-
+		RotateWeapon(deltaTime);
 		DisplayWeapon();
 
 
-		Vector2 velocity = Velocity;
+		float SlowDown = 0;
 		Vector2 direction = Input.GetVector("left", "right", "up", "down");
 
-		velocity.X = direction.X * Speed;
-		velocity.Y = direction.Y * Speed;
+		if(inventory[itemIndex] != null)
+		{
+			inventory[itemIndex].Position = hand.GlobalPosition;
+			SlowDown = Input.IsActionPressed("RMB") ? ADSSlowDown : SlowDown;
+		}
+		 
+		Vector2 velocity = direction * Speed * (1-SlowDown);
 
 		velocity.Normalized();
 		Velocity = Velocity.Lerp(velocity, (float)deltaTime * Acceleration);
 		MoveAndSlide();
 		//var collisionData = MoveAndCollide(Velocity);
-
-
 	}
+
+
 
 	private void RotateHead(){
 
@@ -167,11 +199,19 @@ public partial class Player : CharacterBody2D
 		head.Rotation = (float)angle;	
 	}
 
-	private void RotateWeapon()
+	private void RotateWeapon(double deltaTime)
 	{
 		double angle = Math.Atan2(LookVector.Y,LookVector.X);
 		hand.Scale = new Vector2(1,LookVector.X < 0 ? -1 : 1);
 		hand.Rotation = (float)angle;
+	
+
+		if(inventory[itemIndex] == null) return;
+		
+		Vector2 WeaponPosition = Input.IsActionPressed("RMB") ? Vector2.Zero : new(-2,5);
+		Node2D Weapon = hand.GetNode(inventory[itemIndex].Get("WeaponName").ToString()) as Node2D;
+		Weapon.Position =  Weapon.Position.Lerp(WeaponPosition, 0.5f);
+
 	}
 
 	public void Kill(){
@@ -190,6 +230,7 @@ public partial class Player : CharacterBody2D
 	
 
 	private void DisplayWeapon(){
+		// could be optimized
 		hand.GetChildren().Cast<Node>().ToList().ForEach(c => (c as Node2D).Visible = false);
 
 		if(inventory[itemIndex] == null) return;
@@ -206,6 +247,16 @@ public partial class Player : CharacterBody2D
 	public void ApplyDamage(Vector2 forceDirection, float force)
 	{
 		Velocity = forceDirection * force;
+	}
+
+	public Vector2 FocusPosition()
+	{
+		float Offset = CameraOffset;
+		if(inventory[itemIndex] != null)
+		{	
+			Offset = Input.IsActionPressed("RMB") ? (float)inventory[itemIndex].Get("ADSRange") : Offset;
+		}
+		return GlobalPosition + LookVector.Normalized() * Math.Clamp(LookVector.Length()/2 , 0, Offset);
 	}
 
 }

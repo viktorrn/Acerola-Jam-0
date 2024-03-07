@@ -8,7 +8,6 @@ res://Items/Shotgun/Shotgun.tscn
 res://Items/Sniper/Sniper.tscn
 res://Items/Sniper/SniperBullet.tscn
 res://Items/Shotgun/Slug.tscn
-res://starting_area.tscn
 res://CustomCursor.cs
 res://Enemy/BiteAttack.cs
 res://Enemy/Biter.cs
@@ -23,3 +22,9 @@ res://Player.cs
 res://PlayerCamera.cs
 res://Projectile.cs
 res://sp1.tres
+res://Enemy/SimpleNest.tscn
+res://Enemy/SimpleNest.cs
+res://Props/ExplosiveBarrel.tscn
+res://Items/NestBomb/NestBomb.tscn
+res://Items/NestBomb/NestBomb.cs
+res://Items/NestBomb/NestBombLocation.tscn

@@ -8,6 +8,11 @@ public partial class Health : Area2D
 	private int CurrentHealth = 20;
 	private System.Collections.Generic.List<Area2D> areaList;
 
+	[Signal] public delegate void OnDiedEventHandler();
+	[Signal] public delegate void OnHitEventHandler(Vector2 forceDirection,float force);
+
+	[Signal] public delegate void OnHealthChangedEventHandler(int currentHealth);
+
 	public override void _Ready()
 	{
 		areaList = new System.Collections.Generic.List<Area2D>();
@@ -29,17 +34,18 @@ public partial class Health : Area2D
 
 		if(body.IsInGroup("Attack"))
 		{
+			
 			int damage = (int)body?.Call("HitTarget",this);
-			
-			GetParent().Call("ApplyDamage",body.Get("ForceDirection"),body.Get("Force"));
-			
+			EmitSignal(nameof(OnHit),body.Get("ForceDirection"),body.Get("Force"));
+		
 			//areaList.Add(body as Area2D);
 			//GetTree().CreateTimer(0.2f).Timeout += () => RemoveArea(body as Area2D);
 
 			CurrentHealth -= damage;
+			EmitSignal(nameof(OnHealthChanged),CurrentHealth);
 			if(CurrentHealth <= 0)
 			{
-				GetParent().Call("Kill");
+				EmitSignal(nameof(OnDied));
 			}
 		}
 	}
@@ -50,5 +56,12 @@ public partial class Health : Area2D
 	private void RemoveArea(Area2D area)
 	{
 		areaList?.Remove(area);
+	}
+
+	public void Heal(int amount)
+	{
+		CurrentHealth += Math.Abs(amount);
+		Math.Clamp(CurrentHealth,0,MaxHealth);
+		EmitSignal(nameof(OnHealthChanged),CurrentHealth);
 	}
 }

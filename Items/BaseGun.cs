@@ -14,6 +14,7 @@ public partial class BaseGun : CharacterBody2D
 
     public int ADSRange = 10;
 
+    public bool CanBePickedUp = true;
 
     public bool CanFire = true; 
     public bool IsReloading = false;
@@ -26,6 +27,7 @@ public partial class BaseGun : CharacterBody2D
     {
         prompt = GetNode("Prompt") as Control;
         Handler = GetNode("Handler") as Node2D;
+        
         try{
 
             WeaponName = (string)Handler.Get("WeaponName");
@@ -77,6 +79,7 @@ public partial class BaseGun : CharacterBody2D
 
     public void ShowPrompt()
     {
+        if(!CanBePickedUp) return;
         prompt.Visible = true;
     }
 

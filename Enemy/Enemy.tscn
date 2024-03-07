@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bd7xbm6j6vh8y"]
+[gd_scene load_steps=14 format=3 uid="uid://bd7xbm6j6vh8y"]
 
 [ext_resource type="Script" path="res://Enemy/Enemy.cs" id="1_1bity"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_5b2uh"]
@@ -42,6 +42,9 @@ radius = 8.06226
 [sub_resource type="AtlasTexture" id="AtlasTexture_ttem2"]
 atlas = ExtResource("2_5b2uh")
 region = Rect2(64, 66, 14, 14)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_a5w0a"]
+radius = 87.0057
 
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 32
@@ -115,3 +118,8 @@ debug_color = Color(0.921569, 0.247059, 0.352941, 0.666667)
 [node name="Sprite2D" type="Sprite2D" parent="Handler/HitBox"]
 z_index = 6
 texture = SubResource("AtlasTexture_ttem2")
+
+[node name="WarningArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WarningArea"]
+shape = SubResource("CircleShape2D_a5w0a")

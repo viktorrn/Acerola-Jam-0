@@ -32,6 +32,7 @@ position = Vector2(11, -2)
 texture = SubResource("AtlasTexture_odolg")
 
 [node name="Area2D" type="Area2D" parent="."]
+visible = false
 collision_layer = 2
 collision_mask = 2
 
@@ -52,4 +53,7 @@ offset_bottom = -17.0
 script = ExtResource("4_nip30")
 BulletSpeed = 2500.0
 bulletOffset = 56
+FireRate = 0.1
+ReloadTime = 0.1
 Damage = 25
+MagSize = 50

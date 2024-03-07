@@ -11,7 +11,8 @@ public partial class Player : CharacterBody2D
 
 
 	[ExportCategory("Movement")]
-	[Export] public float Speed = 200.0f;
+	[Export] public float Speed = 120.0f;
+	[Export] public float SprintSpeed = 180.0f;
 	[Export] public float Acceleration = 6.0f;
 
 	[Export] public float ADSSlowDown = 0.4f;
@@ -20,6 +21,14 @@ public partial class Player : CharacterBody2D
 	[ExportCategory("Health")]
 	[Export] public int Health = 4;
 	[Export] public int MaxHealth = 4; 
+
+	[ExportCategory("Stamina")]
+	[Export] public float Stamina = 4;
+	[Export] public float MaxStamina = 4;
+
+	[Export] public float StaminaRegenCooldown = 1.0f;
+
+	public bool StaminaCanRegen = true;
 
 
 	public Vector2 LookVector;
@@ -36,7 +45,14 @@ public partial class Player : CharacterBody2D
 	private Health hurtBox;
 	private Area2D pickUpBox;
 
-	
+	private ProgressBar healthBar;
+	private ProgressBar staminaBar;
+
+	private Timer staminaRegenTimer;
+
+	private bool SwappingItem = false;
+
+	[Signal] public delegate void OnPlayerDiedEventHandler();
 
 	
 
@@ -53,21 +69,67 @@ public partial class Player : CharacterBody2D
 		pickUpBox.BodyEntered += OnPickUpBoxBodyEntered;
 		pickUpBox.BodyExited += OnPickUpBoxExited;
 
-
-
 		hurtBox.SetUpHealth(MaxHealth);
+		hurtBox.OnDied += Kill;
+		hurtBox.OnHit += ApplyDamage;
+		
 		inventory = new() { null, null, null, null };
 		
-	
-		
-	}
+		healthBar = GetNode("Control").GetNode("Health") as ProgressBar;
+		healthBar.MaxValue = MaxHealth;
+		healthBar.Value = Health;
+		hurtBox.OnHealthChanged += (int health) => healthBar.Value = health;
+
+		Stamina = MaxStamina;
+		staminaBar = GetNode("Control").GetNode("Stamina") as ProgressBar;
+		staminaBar.MaxValue = MaxStamina;
+        staminaRegenTimer = new Timer
+        {
+            OneShot = false
+        };
+		AddChild(staminaRegenTimer);
+		staminaRegenTimer.Timeout += () => StaminaCanRegen = true;
+
+    }
 
     public override void _Process(double delta)
     {	
+
 		foreach(var i in itemsInRange)
 		{
 			i?.Call("HidePrompt");
 		}
+
+		DesiredLookVector = GetGlobalMousePosition() - head.GlobalPosition;
+		LookVector = LookVector.Lerp(DesiredLookVector, (float)delta*WeaponSnapSpeed);
+
+		int oldItemIndex = itemIndex;
+
+		if(!SwappingItem)
+		{
+			if(Input.IsActionJustPressed("1"))
+			{
+				itemIndex = 0;
+			} else if(Input.IsActionJustPressed("2"))
+			{
+				itemIndex = 1;
+			} else if(Input.IsActionJustPressed("3"))
+			{
+				itemIndex = 2;
+				
+			} else if(Input.IsActionJustPressed("4"))
+			{
+				itemIndex = 3;
+			}
+		}
+
+		if(itemIndex != oldItemIndex)
+		{
+			SwappingItem = true;
+			GetTree().CreateTimer(0.4f).Timeout += () => SwappingItem = false;
+		}
+		
+
 
 		if(itemsInRange.Count > 0)
 		{
@@ -78,36 +140,39 @@ public partial class Player : CharacterBody2D
 			if(Input.IsActionJustPressed("Interact"))
 			{
 
-				int type = (int)(item != null ? item.Get("weaponType") : -1);
+				int type = (int)(item != null ? item.Get("WeaponType") : -1);
 				if(type == -1)
 				{
 					return;
 				}
 				
-				DropCurrentHeldWeapon(itemIndex);
+				DropCurrentHeldWeapon(type);
 
 				inventory[type] = item;
 				inventory[type].Call("PickUp");
 				
+				itemIndex = type;
+				SwappingItem = true;
+				GetTree().CreateTimer(0.4f).Timeout += () => SwappingItem = false;
+
 				itemsInRange.Remove(item);
 			}
 		}
-		
+
+
+		if(inventory[itemIndex] == null || SwappingItem) return;
+
 		if(Input.IsActionJustPressed("Drop")){
 			DropCurrentHeldWeapon(itemIndex);
 		}
+
 
 		if(Input.IsActionJustPressed("Reload")){
 			GD.Print("Reloading");
 			inventory[itemIndex]?.Call("Reload");
 		}
 		
-		DesiredLookVector = GetGlobalMousePosition() - head.GlobalPosition;
-		LookVector = LookVector.Lerp(DesiredLookVector, (float)delta*WeaponSnapSpeed);
-
-		
-		
-		if(inventory[itemIndex] == null) return;
+		if(Input.IsActionPressed("Shift")) return;
 		
 		if(Input.IsActionJustPressed("LMB")){
 			try
@@ -137,13 +202,17 @@ public partial class Player : CharacterBody2D
     public override void _PhysicsProcess(double deltaTime)
 	{
 		
-
-		RotateHead();
+		
+		RotateBody();
 		RotateWeapon(deltaTime);
 		DisplayWeapon();
-
+		if(StaminaCanRegen && Stamina < MaxStamina)
+		{
+			Stamina += (float)deltaTime;
+		}
 
 		float SlowDown = 0;
+		float MoveSpeed = Speed;
 		Vector2 direction = Input.GetVector("left", "right", "up", "down");
 
 		if(inventory[itemIndex] != null)
@@ -151,18 +220,38 @@ public partial class Player : CharacterBody2D
 			inventory[itemIndex].Position = hand.GlobalPosition;
 			SlowDown = Input.IsActionPressed("RMB") ? ADSSlowDown : SlowDown;
 		}
-		 
-		Vector2 velocity = direction * Speed * (1-SlowDown);
+
+		if(Input.IsActionPressed("Shift") && Stamina > 0.5f)
+		{
+			Stamina -= (float)deltaTime;
+			MoveSpeed = SprintSpeed;
+			StaminaCanRegen = false;
+			staminaRegenTimer.Stop();
+		}
+		
+		/*if(Stamina <= 0.5f)
+		{
+			MoveSpeed *= 0.6f;
+		}*/
+
+		if(Input.IsActionJustReleased("Shift"))
+		{
+			staminaRegenTimer.Start(StaminaRegenCooldown);
+		}
+
+
+		Vector2 velocity = direction * MoveSpeed * (1-SlowDown);
 
 		velocity.Normalized();
 		Velocity = Velocity.Lerp(velocity, (float)deltaTime * Acceleration);
 		MoveAndSlide();
 		//var collisionData = MoveAndCollide(Velocity);
+		staminaBar.Value = Stamina;
 	}
 
 
 
-	private void RotateHead(){
+	private void RotateBody(){
 
 		double angle = LookVector.Angle();
 
@@ -187,8 +276,12 @@ public partial class Player : CharacterBody2D
 		
 		
 		Sprite2D bodySprite = body.GetNode("Sprite2D") as Sprite2D;
+		Sprite2D bombSprite = body.GetNode("NestBomb") as Sprite2D;
+
 		Sprite2D legSprite = legs.GetNode("Sprite2D") as Sprite2D;
 		Sprite2D headSprite = head.GetNode("Sprite2D") as Sprite2D;
+
+		bombSprite.Visible = false;
 
 		int frame = LookVector.Y > 0 ? 0 : 1;
 		bodySprite.Frame = frame;
@@ -197,6 +290,12 @@ public partial class Player : CharacterBody2D
 
 		head.Scale = new Vector2(LookVector.X < 0 ? -1 : 1, 1);
 		head.Rotation = (float)angle;	
+
+		if(inventory[3] != null && itemIndex != 3)
+		{
+			bombSprite.Visible = true;
+			bombSprite.ZIndex = frame; //Cheese as it will produce the same result even though the logic isnt direcly correct
+		}
 	}
 
 	private void RotateWeapon(double deltaTime)
@@ -208,24 +307,28 @@ public partial class Player : CharacterBody2D
 
 		if(inventory[itemIndex] == null) return;
 		
-		Vector2 WeaponPosition = Input.IsActionPressed("RMB") ? Vector2.Zero : new(-2,5);
+		Vector2 WeaponPosition = Input.IsActionPressed("RMB") && !Input.IsActionPressed("Shift") ? Vector2.Zero : new(-2,5);
 		Node2D Weapon = hand.GetNode(inventory[itemIndex].Get("WeaponName").ToString()) as Node2D;
 		Weapon.Position =  Weapon.Position.Lerp(WeaponPosition, 0.5f);
 
 	}
 
 	public void Kill(){
-		GetTree().ReloadCurrentScene();
+		DropCurrentHeldWeapon(itemIndex);
+		GlobalPosition = new Vector2(-85,310);
+		EmitSignal("OnPlayerDied");
+		hurtBox.Heal(MaxHealth);
+		Stamina = MaxStamina;
 	}
 
 	private void OnPickUpBoxBodyEntered(Node body){
-		if(inventory.Contains(body)) return;
+		if(inventory.Contains(body) || !(bool)body.Get("CanBePickedUp")) return;
 		itemsInRange.Add(body as CharacterBody2D);
 	}
 
 	private void OnPickUpBoxExited(Node body){
 		itemsInRange?.Remove(body as CharacterBody2D);
-		body.Call("HidePrompt");
+		body?.Call("HidePrompt");
 	}
 	
 
@@ -241,6 +344,8 @@ public partial class Player : CharacterBody2D
 				break;
 			case "Shotgun":
 				break;
+			case "NestBomb":
+				break;
 		}
 	}
 
@@ -252,7 +357,7 @@ public partial class Player : CharacterBody2D
 	public Vector2 FocusPosition()
 	{
 		float Offset = CameraOffset;
-		if(inventory[itemIndex] != null)
+		if(inventory[itemIndex] != null && itemIndex != 3 && !Input.IsActionPressed("Shift"))
 		{	
 			Offset = Input.IsActionPressed("RMB") ? (float)inventory[itemIndex].Get("ADSRange") : Offset;
 		}

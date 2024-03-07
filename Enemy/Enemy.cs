@@ -14,6 +14,9 @@ public partial class Enemy : CharacterBody2D
 	private CharacterBody2D Target;
 	private CharacterBody2D Player;
 	private Vector2 TargetPosition;
+
+	public Vector2 SpawnLocation;
+
 	private float FrameDelta = 0.0f;
 
 	public float TargetRange = 200.0f;
@@ -23,7 +26,11 @@ public partial class Enemy : CharacterBody2D
 	public bool AttackOnCooldown = false;
 	private bool LookingLeft = false;
 
+	private bool LostTarget = true;
+
 	[Export] public bool DebugDraw = true;
+
+	[Signal] public delegate void OnDiedEventHandler();
 
 	private Vector2 DeisredVelocity = Vector2.Zero;
 
@@ -44,6 +51,10 @@ public partial class Enemy : CharacterBody2D
         navAgent = GetNode("NavAgent") as NavigationAgent2D;
 		spriteNode = GetNode("Sprite") as Node2D;
 		animPlayer = spriteNode.GetNode("AnimationPlayer") as AnimationPlayer;
+		
+		Health health = GetNode("HurtBox") as Health;
+		health.OnHit += ApplyDamage;
+		health.OnDied += Kill;
 		
     }
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -81,9 +92,8 @@ public override void _Draw()
 	{
 		if(InAttackState) 
 		{
-		
+			if(Target == null) return;
 			LookingLeft = (Target.GlobalPosition - Position).X > 0;
-			
 			return;
 		}
 		if(TakeDamage)
@@ -106,8 +116,14 @@ public override void _Draw()
 		{
 			if(Position.DistanceTo(Player.GlobalPosition) < TargetRange)
 			{
-				AngleToReach = (Player.GlobalPosition - Position).Angle() + (float)Math.PI/2 - GD.Randf()*(float)Math.PI;
+				AngleToReach = (Player.GlobalPosition - Position).Angle() - (float)Math.PI/2 - GD.Randf()*(float)Math.PI;
 				Target = Player;
+				LostTarget = false;
+				(Target as Player).OnPlayerDied += () => {
+					Target = null;
+					LostTarget = true;
+					DeisredVelocity = Vector2.Zero;
+				};
 			}
 		} else {
 			ChaseState();
@@ -170,8 +186,17 @@ public override void _Draw()
 	public void Kill()
 	{
 		Alive = false;
+		EmitSignal(nameof(OnDied));
+		CallDeferred(nameof(DisableCollision));
+		
+		
 		//navAgent.
 		// play death stuff
+	}
+
+	public void DisableCollision()
+	{
+		
 	}
 
 	public void ApplyDamage(Vector2 forceDirection, float force)
@@ -182,4 +207,6 @@ public override void _Draw()
 		Velocity = Velocity.Length() > 200 ? Velocity.Normalized() * 200 : Velocity;
 		Target = Player;
 	}
+
+
 }

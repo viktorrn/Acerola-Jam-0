@@ -116,6 +116,7 @@ Reload={
 2d_physics/layer_5="EnemyAttack"
 2d_physics/layer_6="EnemyBodies"
 2d_physics/layer_9="NestBombLocation"
+2d_physics/layer_10="Interactions"
 
 [navigation]
 

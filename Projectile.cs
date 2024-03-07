@@ -31,7 +31,7 @@ public partial class Projectile : CharacterBody2D
 			return;
 		}
 		
-		if(collision_data.GetCollider() is TileMap){
+		if(collision_data.GetCollider() is TileMap || collision_data.GetCollider() is StaticBody2D){
 			QueueFree();
 		}		
 	}

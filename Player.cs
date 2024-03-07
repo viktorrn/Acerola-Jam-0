@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 public partial class Player : CharacterBody2D
 {
@@ -34,7 +35,8 @@ public partial class Player : CharacterBody2D
 	public Vector2 LookVector;
 	public Vector2 DesiredLookVector;
 
-	private System.Collections.Generic.List<CharacterBody2D> itemsInRange = new();
+	private List<CharacterBody2D> itemsInRange = new();
+	private List<CharacterBody2D> interactionsInRange = new();
 
 
 	private Node2D head;
@@ -44,6 +46,7 @@ public partial class Player : CharacterBody2D
 	private CharacterBody2D weapon;
 	private Health hurtBox;
 	private Area2D pickUpBox;
+	private Area2D interactionBox;
 
 	private ProgressBar healthBar;
 	private ProgressBar staminaBar;
@@ -68,6 +71,10 @@ public partial class Player : CharacterBody2D
 		pickUpBox = GetNode("PickUp") as Area2D;
 		pickUpBox.BodyEntered += OnPickUpBoxBodyEntered;
 		pickUpBox.BodyExited += OnPickUpBoxExited;
+		interactionBox = GetNode("Interact") as Area2D;
+		interactionBox.BodyEntered += OnInteractionBodyEnterd;
+		interactionBox.BodyExited += OnInteractionBodyExited;
+
 
 		hurtBox.SetUpHealth(MaxHealth);
 		hurtBox.OnDied += Kill;
@@ -95,13 +102,9 @@ public partial class Player : CharacterBody2D
     public override void _Process(double delta)
     {	
 
-		foreach(var i in itemsInRange)
-		{
-			i?.Call("HidePrompt");
-		}
-
 		DesiredLookVector = GetGlobalMousePosition() - head.GlobalPosition;
 		LookVector = LookVector.Lerp(DesiredLookVector, (float)delta*WeaponSnapSpeed);
+		
 
 		int oldItemIndex = itemIndex;
 
@@ -129,7 +132,27 @@ public partial class Player : CharacterBody2D
 			GetTree().CreateTimer(0.4f).Timeout += () => SwappingItem = false;
 		}
 		
+		foreach(var i in interactionsInRange)
+		{
+			i?.Call("HidePrompt");
+		}
+		
+		if(interactionsInRange.Count > 0)
+		{
+			CharacterBody2D interaction = interactionsInRange.First();
+			interaction?.Call("ShowPrompt");
+			if(Input.IsActionJustPressed("Interact"))
+			{
+				interaction?.Call("Interact");
+			}
+		}
 
+		foreach(var i in itemsInRange)
+		{
+			i?.Call("HidePrompt");
+		}
+
+		
 
 		if(itemsInRange.Count > 0)
 		{
@@ -163,13 +186,22 @@ public partial class Player : CharacterBody2D
 		if(inventory[itemIndex] == null || SwappingItem) return;
 
 		if(Input.IsActionJustPressed("Drop")){
+			// if Is Bomb then make it interactabke
+			if(itemIndex == 3 && (bool)inventory[3]?.Get("InsideArea"))	
+			{
+				interactionsInRange.Add(inventory[3]);
+			}
+			
 			DropCurrentHeldWeapon(itemIndex);
+
+			return;
 		}
 
 
 		if(Input.IsActionJustPressed("Reload")){
 			GD.Print("Reloading");
 			inventory[itemIndex]?.Call("Reload");
+			return;
 		}
 		
 		if(Input.IsActionPressed("Shift")) return;
@@ -182,6 +214,7 @@ public partial class Player : CharacterBody2D
 				if(result == 0)
 				{
 				GD.Print("Out of ammo");
+				return;
 				}
 			}
 			catch(Exception e)
@@ -193,7 +226,7 @@ public partial class Player : CharacterBody2D
 
 	private void DropCurrentHeldWeapon(int index){
 		if(inventory[index] is null) return;
-		inventory[index].GlobalPosition = GlobalPosition;;
+		inventory[index].GlobalPosition = GlobalPosition + new Vector2(0,10);
 		inventory[index]?.Call("Drop");
 		inventory[index] = null;
 	}
@@ -274,7 +307,6 @@ public partial class Player : CharacterBody2D
 		body.Scale = new Vector2(LookVector.X < 0 ? -1 : 1, 1);
 		legs.Scale = new Vector2(LookVector.X < 0 ? -1 : 1, 1);
 		
-		
 		Sprite2D bodySprite = body.GetNode("Sprite2D") as Sprite2D;
 		Sprite2D bombSprite = body.GetNode("NestBomb") as Sprite2D;
 
@@ -304,7 +336,6 @@ public partial class Player : CharacterBody2D
 		hand.Scale = new Vector2(1,LookVector.X < 0 ? -1 : 1);
 		hand.Rotation = (float)angle;
 	
-
 		if(inventory[itemIndex] == null) return;
 		
 		Vector2 WeaponPosition = Input.IsActionPressed("RMB") && !Input.IsActionPressed("Shift") ? Vector2.Zero : new(-2,5);
@@ -314,7 +345,11 @@ public partial class Player : CharacterBody2D
 	}
 
 	public void Kill(){
-		DropCurrentHeldWeapon(itemIndex);
+		for(int i = 0; i < 4; i++)
+		{
+			DropCurrentHeldWeapon(i);
+
+		}
 		GlobalPosition = new Vector2(-85,310);
 		EmitSignal("OnPlayerDied");
 		hurtBox.Heal(MaxHealth);
@@ -328,6 +363,17 @@ public partial class Player : CharacterBody2D
 
 	private void OnPickUpBoxExited(Node body){
 		itemsInRange?.Remove(body as CharacterBody2D);
+		body?.Call("HidePrompt");
+	}
+
+	private void OnInteractionBodyEnterd(Node body){
+		if(!(bool)body.Get("CanBeInteracted")) return;
+		interactionsInRange.Add(body as CharacterBody2D);
+		GD.Print("InteractBody");
+	}
+
+	private void OnInteractionBodyExited(Node body){
+		interactionsInRange?.Remove(body as CharacterBody2D);
 		body?.Call("HidePrompt");
 	}
 	

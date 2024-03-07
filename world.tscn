@@ -67,6 +67,21 @@ layer_2/y_sort_origin = 0
 layer_2/z_index = 0
 layer_2/tile_data = PackedInt32Array()
 
+[node name="NestBombLocation" parent="Base Layer" instance=ExtResource("11_fio2l")]
+position = Vector2(570.841, 561.004)
+rotation = 8.23963e-05
+scale = Vector2(0.998054, 0.998143)
+
+[node name="NestBombLocation2" parent="Base Layer" instance=ExtResource("11_fio2l")]
+position = Vector2(84.8115, 280.485)
+rotation = 8.23963e-05
+scale = Vector2(0.998054, 0.998143)
+
+[node name="SimpleNest" parent="Base Layer" instance=ExtResource("9_gmy4w")]
+position = Vector2(603.784, 467.181)
+rotation = 8.23963e-05
+scale = Vector2(0.998054, 0.998143)
+
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
 rotation = -8.23889e-05
 navigation_polygon = SubResource("NavigationPolygon_4s2w1")
@@ -84,9 +99,6 @@ position = Vector2(-86, 228)
 [node name="Enemy" parent="." instance=ExtResource("8_uvmeq")]
 position = Vector2(451, 414)
 
-[node name="SimpleNest" parent="." instance=ExtResource("9_gmy4w")]
-position = Vector2(605, 468)
-
 [node name="CustomCrosshair" type="Node2D" parent="."]
 top_level = true
 z_index = 100
@@ -94,6 +106,3 @@ script = ExtResource("7_dtrq0")
 
 [node name="Sprite2D" type="Sprite2D" parent="CustomCrosshair"]
 texture = SubResource("AtlasTexture_o8rj4")
-
-[node name="NestBombLocation" parent="." instance=ExtResource("11_fio2l")]
-position = Vector2(572, 562)

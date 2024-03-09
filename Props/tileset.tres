@@ -1,6 +1,9 @@
-[gd_resource type="TileSet" load_steps=5 format=3 uid="uid://tppla7phxvo2"]
+[gd_resource type="TileSet" load_steps=6 format=3 uid="uid://tppla7phxvo2"]
 
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_kogld"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_obb75"]
+polygon = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2i73r"]
 resource_name = "Terrain"
@@ -84,6 +87,7 @@ texture_region_size = Vector2i(32, 32)
 3:10/0/physics_layer_1/linear_velocity = Vector2(0, 0)
 3:10/0/physics_layer_1/angular_velocity = 0.0
 2:7/0 = 0
+2:7/0/occlusion_layer_0/polygon = SubResource("OccluderPolygon2D_obb75")
 2:7/0/physics_layer_0/linear_velocity = Vector2(0, 0)
 2:7/0/physics_layer_0/angular_velocity = 0.0
 2:7/0/physics_layer_0/polygon_0/points = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
@@ -735,6 +739,8 @@ texture_region_size = Vector2i(32, 32)
 
 [resource]
 tile_size = Vector2i(32, 32)
+uv_clipping = true
+occlusion_layer_0/light_mask = 1
 physics_layer_0/collision_layer = 1
 physics_layer_1/collision_layer = 8
 physics_layer_1/collision_mask = 8

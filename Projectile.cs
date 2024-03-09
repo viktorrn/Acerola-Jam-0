@@ -7,13 +7,13 @@ public partial class Projectile : CharacterBody2D
 	public int Damage = 10;
 
 	public float Force = 1;
-	public Vector2 ForceDirection = Vector2.Zero;
+	public Vector2 ForceDirection;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		AddToGroup("Attack");
-		ForceDirection = new((float)Math.Cos(Rotation),(float)Math.Sin(Rotation));
-		GetTree().CreateTimer(5).Connect("timeout", new Callable(this,nameof(RemoveSelf)));
+		//ForceDirection = new((float)Math.Cos(Rotation),(float)Math.Sin(Rotation));
+		GetTree().CreateTimer(5).Timeout += QueueFree;
 	}
 
 	private void RemoveSelf()
@@ -39,6 +39,7 @@ public partial class Projectile : CharacterBody2D
 	public int HitTarget(Health target)
 	{
 		GetNode("HitManager").Call("HitTarget",target);
+		Speed = 0;
 		return Damage;
 	}
 }

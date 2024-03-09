@@ -30,6 +30,7 @@ public partial class SniperHandler : Node2D
         
         bulletInstance.Position = position + direction.Normalized()*bulletOffset;
         bulletInstance.Rotation = (float)angle;
+        bulletInstance.ForceDirection = direction.Normalized();
         bulletInstance.Speed = BulletSpeed;
         bulletInstance.Damage = Damage;
         bulletInstance.Force = Force;

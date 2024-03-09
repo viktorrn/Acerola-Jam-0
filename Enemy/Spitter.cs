@@ -1,42 +1,36 @@
 using Godot;
 using System;
 
-public partial class Biter : Node2D
+public partial class Spitter : Node2D
 {
-	[Export] public int MaxHealth = 10;
-	[Export] public int HeadMaxHealth = 5;
+	[Export] public int MaxHealth = 8;
 
-	[Export] public float Speed = 130.0f;
+	[Export] public float Speed = 90.0f;
+
 
 	[ExportCategory("Attack")]
+	[Export] public float AttackRange = 80.0f;
 	[Export] public float TargetRange = 200.0f;
-	
-	[Export] public float AttackRange = 40;
-	[Export] public int LunghRange = 220;
-
-	[Export] public int Damage = 5;
+	[Export] public int Damage = 5; 
 	[Export] public float Force = 60;
-	
+	[Export] public float ProjectileSpeed = 400.0f;
+
 	[ExportCategory("Attack Timings")]
 
 	[Export] public float ForeSwing = 0.5f;
 
-	[Export] public float ActiveFrames = 0.2f;
-
+	[Export] public float ActiveFrames = 0.1f;
 	[Export] public float NLagg = 0.5f;
+	[Export] public float AttackOnCooldown = 1.0f;
 
-	[Export] public float AttackOnCooldown = 3.0f;
-	
-	private Area2D hitBox;
 	private Vector2 InitialVector;
+	private Area2D hitBox;
+
+	private PackedScene packedScene;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		hitBox = GetNode("HitBox") as Area2D;
-		hitBox.AddToGroup("Attack");
-		hitBox.Monitorable = false;
-		hitBox.Visible = false;
-		hitBox.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = true;
+		packedScene = GD.Load<PackedScene>("res://Enemy/Spit.tscn");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -55,29 +49,23 @@ public partial class Biter : Node2D
 		Vector2 direction = (target.GlobalPosition - GlobalPosition).Normalized();
 		direction = InitialVector.Normalized();	
 
-
-
-
-		(hitBox as BiteAttack).ForceDirection = direction;
-		
-		hitBox.GlobalPosition = GlobalPosition + direction * Math.Clamp(target.GlobalPosition.DistanceTo(GlobalPosition), 0, AttackRange);
-		hitBox.Monitorable = true;
-		hitBox.Visible = true;
-		hitBox.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
-		GetParent<CharacterBody2D>().Velocity = direction * LunghRange;
+		Projectile spit = (Projectile)packedScene.Instantiate();
+		spit.GlobalPosition = GlobalPosition;
+		spit.ForceDirection = direction;
+		spit.Speed = ProjectileSpeed;
+		spit.Damage = Damage;
+		spit.Force = Force;
+		GetTree().Root.GetNode("world").AddChild(spit);
+	
 	}
 
 	public void AttackComplete()
 	{
-		hitBox.Monitorable = false;
-		hitBox.Visible = false;
-		hitBox.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = true;
+		
 	}
 
 	public float TargetAngle()
 	{
-		return (float)Math.PI/2 - GD.Randf()*(float)Math.PI;
+		return (float)Math.PI/4 - GD.Randf()*(float)Math.PI/2;
 	}
-
-
 }

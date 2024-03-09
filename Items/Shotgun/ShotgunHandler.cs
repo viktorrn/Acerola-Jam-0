@@ -30,13 +30,14 @@ public partial class ShotgunHandler : Node2D
         double lookAngle = Math.Atan2(direction.Y,direction.X);
         for(int i = 0; i < 5; i++){
         
-            double angle = lookAngle + (i-2)*Spread;
+            double angle = (i-2)*Spread;
             
             Projectile bulletInstance = bulletScene.Instantiate() as Projectile;
             
 
-            bulletInstance.Position = position + new Vector2((float)Math.Cos(angle),(float)Math.Sin(angle))*BulletOffset;
+            bulletInstance.Position = position + new Vector2((float)Math.Cos(lookAngle + angle),(float)Math.Sin(lookAngle + angle))*BulletOffset;
             bulletInstance.Rotation = (float)angle;
+            bulletInstance.ForceDirection = direction.Normalized().Rotated((float)angle);
             bulletInstance.Speed = BulletSpeed;
             bulletInstance.Damage = Damage;
             bulletInstance.Force = Force;

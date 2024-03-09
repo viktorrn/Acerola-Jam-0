@@ -4,6 +4,7 @@ res://world.tscn
 res://Enemy/Enemy.tscn
 res://Player.tscn
 res://Items/NestBomb/NestBombLocation.tscn
+res://Enemy/SimpleNest.tscn
 res://CustomCursor.cs
 res://Enemy/BiteAttack.cs
 res://Enemy/Biter.cs
@@ -19,3 +20,8 @@ res://Items/Sniper/SniperHandler.cs
 res://Player.cs
 res://PlayerCamera.cs
 res://Projectile.cs
+res://Enemy/Biter.tscn
+res://Enemy/Spitter.cs
+res://Enemy/Spitter.tscn
+res://Enemy/Spit.tscn
+res://Items/Shotgun/Slug.tscn

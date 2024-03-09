@@ -36,6 +36,7 @@ public partial class Enemy : CharacterBody2D
 
 	private NavigationAgent2D navAgent;
 
+	private Area2D alertArea;
 
 	private Node2D spriteNode;
 
@@ -43,6 +44,9 @@ public partial class Enemy : CharacterBody2D
 
 	private float AngleToReach;
 
+	private RayCast2D LOS;
+
+	private Node2D Handler;
 	override public void _Ready()
 	{
 		Alive = true;
@@ -51,10 +55,19 @@ public partial class Enemy : CharacterBody2D
         navAgent = GetNode("NavAgent") as NavigationAgent2D;
 		spriteNode = GetNode("Sprite") as Node2D;
 		animPlayer = spriteNode.GetNode("AnimationPlayer") as AnimationPlayer;
+		alertArea = GetNode("AlertArea") as Area2D;
+		
+		Handler = GetNode("Handler") as Node2D;
+
 		
 		Health health = GetNode("HurtBox") as Health;
 		health.OnHit += ApplyDamage;
 		health.OnDied += Kill;
+
+		LOS = GetNode("LineOfSight") as RayCast2D;
+		LOS.Position = Vector2.Zero;
+
+
 		
     }
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
@@ -85,7 +98,7 @@ public partial class Enemy : CharacterBody2D
 
 public override void _Draw()
 {
-	DrawCircle(Vector2.Zero, AttackRange, new Color(1,0,0,0.1f));
+	DrawCircle(Vector2.Zero, (float)Handler.Get("AttackRange"), new Color(1,0,0,0.1f));
 }
 
     public void AliveState()
@@ -114,9 +127,14 @@ public override void _Draw()
 	{
 		if(Target == null)
 		{
-			if(Position.DistanceTo(Player.GlobalPosition) < TargetRange)
+			if(Position.DistanceTo(Player.GlobalPosition) < (float)Handler.Get("TargetRange"))
 			{
-				AngleToReach = (Player.GlobalPosition - Position).Angle() - (float)Math.PI/2 - GD.Randf()*(float)Math.PI;
+				LOS.TargetPosition = Player.GlobalPosition - Position;
+				LOS.ForceRaycastUpdate();
+
+				if(LOS.IsColliding()) return;
+
+				AngleToReach = (Player.GlobalPosition - Position).Angle() - (float)Handler.Call("TargetAngle");
 				Target = Player;
 				LostTarget = false;
 				(Target as Player).OnPlayerDied += () => {
@@ -138,20 +156,20 @@ public override void _Draw()
 
 	public void ChaseState()
 	{	
-		if(!AttackOnCooldown && Position.DistanceTo(Target.GlobalPosition) < AttackRange)
+		if(!AttackOnCooldown && Position.DistanceTo(Target.GlobalPosition) < (float)Handler.Get("AttackRange"))
 		{
 			AttackState();
 			DeisredVelocity = Vector2.Zero;
 			Velocity = Vector2.Zero;
 		} else {
 			float angle = (Player.GlobalPosition - Position).Angle();
-			navAgent.TargetPosition = Player.GlobalPosition - new Vector2(AttackRange,0).Rotated(angle+AngleToReach);
+			navAgent.TargetPosition = Player.GlobalPosition - new Vector2((float)Handler.Get("AttackRange"),0).Rotated(angle+AngleToReach);
 			
 			TargetPosition = navAgent.GetNextPathPosition();
 			
 			Vector2 direction = (TargetPosition - GlobalPosition).Normalized();
 			
-			DeisredVelocity = direction * Speed * (1-Stunned);
+			DeisredVelocity = direction * (float)Handler.Get("Speed") * (1-Stunned);
 			LookingLeft = direction.X > 0;
 		}
 	}
@@ -169,7 +187,7 @@ public override void _Draw()
 	{
 	
 		InAttackState = false;
-		AngleToReach = (Player.GlobalPosition - Position).Angle() + (float)Math.PI/2 - GD.Randf()*(float)Math.PI;
+		AngleToReach = (Player.GlobalPosition - Position).Angle() + (float)Handler.Call("TargetAngle");
 	}
 
 	public void AttackCooldownComplete()
@@ -189,14 +207,18 @@ public override void _Draw()
 		EmitSignal(nameof(OnDied));
 		CallDeferred(nameof(DisableCollision));
 		
+		// Alter All Other WithIn Range
 		
+
+
 		//navAgent.
 		// play death stuff
 	}
 
 	public void DisableCollision()
 	{
-		
+		CollisionLayer = 0;
+		CollisionMask = 0;
 	}
 
 	public void ApplyDamage(Vector2 forceDirection, float force)
@@ -204,7 +226,7 @@ public override void _Draw()
 
 		TakeDamage = true;
 		Velocity += forceDirection*force;
-		Velocity = Velocity.Length() > 200 ? Velocity.Normalized() * 200 : Velocity;
+		Velocity = Velocity.Length() > 2000 ? Velocity.Normalized() * 200 : Velocity;
 		Target = Player;
 	}
 

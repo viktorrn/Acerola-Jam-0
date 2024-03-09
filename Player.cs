@@ -38,7 +38,7 @@ public partial class Player : CharacterBody2D
 	private List<CharacterBody2D> itemsInRange = new();
 	private List<CharacterBody2D> interactionsInRange = new();
 
-
+	public bool IsAlive = true;
 	private Node2D head;
 	private Node2D body;
 	private Node2D hand;
@@ -101,6 +101,7 @@ public partial class Player : CharacterBody2D
 
     public override void _Process(double delta)
     {	
+		if(!IsAlive) return;
 
 		DesiredLookVector = GetGlobalMousePosition() - head.GlobalPosition;
 		LookVector = LookVector.Lerp(DesiredLookVector, (float)delta*WeaponSnapSpeed);
@@ -226,7 +227,7 @@ public partial class Player : CharacterBody2D
 
 	private void DropCurrentHeldWeapon(int index){
 		if(inventory[index] is null) return;
-		inventory[index].GlobalPosition = GlobalPosition + new Vector2(0,10);
+		inventory[index].GlobalPosition = GlobalPosition + new Vector2(0,10).Rotated(LookVector.Angle());
 		inventory[index]?.Call("Drop");
 		inventory[index] = null;
 	}
@@ -235,43 +236,42 @@ public partial class Player : CharacterBody2D
     public override void _PhysicsProcess(double deltaTime)
 	{
 		
-		
-		RotateBody();
-		RotateWeapon(deltaTime);
-		DisplayWeapon();
-		if(StaminaCanRegen && Stamina < MaxStamina)
-		{
-			Stamina += (float)deltaTime;
-		}
-
-		float SlowDown = 0;
 		float MoveSpeed = Speed;
-		Vector2 direction = Input.GetVector("left", "right", "up", "down");
-
-		if(inventory[itemIndex] != null)
-		{
-			inventory[itemIndex].Position = hand.GlobalPosition;
-			SlowDown = Input.IsActionPressed("RMB") ? ADSSlowDown : SlowDown;
-		}
-
-		if(Input.IsActionPressed("Shift") && Stamina > 0.5f)
-		{
-			Stamina -= (float)deltaTime;
-			MoveSpeed = SprintSpeed;
-			StaminaCanRegen = false;
-			staminaRegenTimer.Stop();
-		}
+		Vector2 direction = Vector2.Zero;
+		float SlowDown = 0;
+		DisplayWeapon();
+		RotateBody();
 		
-		/*if(Stamina <= 0.5f)
-		{
-			MoveSpeed *= 0.6f;
-		}*/
+		if(IsAlive){
+			RotateWeapon(deltaTime);
+			
+			if(StaminaCanRegen && Stamina < MaxStamina)
+			{
+				Stamina += (float)deltaTime;
+			}
 
-		if(Input.IsActionJustReleased("Shift"))
-		{
-			staminaRegenTimer.Start(StaminaRegenCooldown);
+			if(inventory[itemIndex] != null)
+			{
+				inventory[itemIndex].Position = hand.GlobalPosition;
+				SlowDown = Input.IsActionPressed("RMB") ? ADSSlowDown : SlowDown;
+			}
+
+			if(Input.IsActionPressed("Shift") && Stamina > 0.5f)
+			{
+				Stamina -= (float)deltaTime;
+				MoveSpeed = SprintSpeed;
+				StaminaCanRegen = false;
+				staminaRegenTimer.Stop();
+			}
+
+			if(Input.IsActionJustReleased("Shift"))
+			{
+				staminaRegenTimer.Start(StaminaRegenCooldown);
+			}
+			staminaBar.Value = Stamina;
+
+			direction = Input.GetVector("left", "right", "up", "down");
 		}
-
 
 		Vector2 velocity = direction * MoveSpeed * (1-SlowDown);
 
@@ -279,7 +279,6 @@ public partial class Player : CharacterBody2D
 		Velocity = Velocity.Lerp(velocity, (float)deltaTime * Acceleration);
 		MoveAndSlide();
 		//var collisionData = MoveAndCollide(Velocity);
-		staminaBar.Value = Stamina;
 	}
 
 
@@ -327,6 +326,8 @@ public partial class Player : CharacterBody2D
 		{
 			bombSprite.Visible = true;
 			bombSprite.ZIndex = frame; //Cheese as it will produce the same result even though the logic isnt direcly correct
+		} else {
+			bombSprite.Visible = false;
 		}
 	}
 
@@ -350,10 +351,16 @@ public partial class Player : CharacterBody2D
 			DropCurrentHeldWeapon(i);
 
 		}
-		GlobalPosition = new Vector2(-85,310);
-		EmitSignal("OnPlayerDied");
-		hurtBox.Heal(MaxHealth);
-		Stamina = MaxStamina;
+		if(!IsAlive) return;	
+		IsAlive = false;
+		
+		GetTree().CreateTimer(5.0f).Timeout += () =>{
+			GlobalPosition = new Vector2(-85,310);
+			EmitSignal("OnPlayerDied");
+			Stamina = MaxStamina;
+			IsAlive = true;
+			hurtBox.Heal(MaxHealth);
+		};
 	}
 
 	private void OnPickUpBoxBodyEntered(Node body){

@@ -1,20 +1,59 @@
-[gd_scene load_steps=4 format=3 uid="uid://cdvra2g8uo2gu"]
+[gd_scene load_steps=7 format=3 uid="uid://cdvra2g8uo2gu"]
 
 [ext_resource type="Script" path="res://Enemy/SimpleNest.cs" id="1_a1ig1"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="1_bdhy5"]
+[ext_resource type="Script" path="res://Health.cs" id="3_qjh1m"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pw1mh"]
 atlas = ExtResource("1_bdhy5")
-region = Rect2(466, 142, 110, 96)
+region = Rect2(576, 256, 512, 96)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ynkb5"]
+font_size = 32
+font_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2pbpy"]
+radius = 24.0
+height = 126.0
 
 [node name="SimpleNest" type="StaticBody2D"]
+z_index = 5
+collision_mask = 0
 script = ExtResource("1_a1ig1")
+MaxAmount = 2
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-22, 11, -32, 28, -42, 28, -49, 16, -50, 2, -43, -9, -28, -9, -24, -18, 15, -19, 39, -10, 52, -2, 52, 17, 45, 28, 12, 34, -4, 32, -14, 20)
+[node name="Collision" type="CollisionPolygon2D" parent="."]
+position = Vector2(2.16441, 0)
+scale = Vector2(0.975543, 1)
+polygon = PackedVector2Array(-49.3719, 25, -61, 8, -30.9206, -3, 24, -4, 56.2103, 9, 39.8092, 28, -2.21867, 31)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-1, -13)
 texture = SubResource("AtlasTexture_pw1mh")
+hframes = 4
+frame = 1
 
 [node name="SpawnLocation" type="Node2D" parent="."]
-position = Vector2(-21, 37)
+position = Vector2(25, -18)
+
+[node name="SpawnTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_left = -12.0
+offset_top = -31.0
+offset_right = 8.0
+offset_bottom = 17.0
+text = "X"
+label_settings = SubResource("LabelSettings_ynkb5")
+
+[node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 128
+collision_mask = 128
+script = ExtResource("3_qjh1m")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+position = Vector2(0, 12)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_2pbpy")

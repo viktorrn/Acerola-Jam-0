@@ -18,6 +18,7 @@ public partial class Health : Area2D
 		areaList = new System.Collections.Generic.List<Area2D>();
 		BodyEntered += HandleAttack;
 		AreaEntered += HandleAttack;
+		AddToGroup("Health");
 	} 
 	// Called when the node enters the scene tree for the first time.
 
@@ -42,6 +43,7 @@ public partial class Health : Area2D
 			//GetTree().CreateTimer(0.2f).Timeout += () => RemoveArea(body as Area2D);
 
 			CurrentHealth -= damage;
+			CurrentHealth = Math.Clamp(CurrentHealth,0,MaxHealth);
 			EmitSignal(nameof(OnHealthChanged),CurrentHealth);
 			if(CurrentHealth <= 0)
 			{
@@ -49,6 +51,19 @@ public partial class Health : Area2D
 			}
 		}
 	}
+
+	public void SmiteAttack(int damage, Vector2 direction, float force)
+	{
+		EmitSignal(nameof(OnHit),direction,force);
+		CurrentHealth -= damage;
+		CurrentHealth = Math.Clamp(CurrentHealth,0,MaxHealth);
+		EmitSignal(nameof(OnHealthChanged),CurrentHealth);
+		if(CurrentHealth <= 0)
+		{
+			EmitSignal(nameof(OnDied));
+		}
+	}
+	
 
 	
 

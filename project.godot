@@ -108,6 +108,7 @@ Reload={
 
 [layer_names]
 
+2d_render/layer_1="walls"
 2d_physics/layer_1="Walls"
 2d_navigation/layer_1="RegularGround"
 2d_physics/layer_2="Items"
@@ -115,6 +116,8 @@ Reload={
 2d_physics/layer_4="Cover"
 2d_physics/layer_5="EnemyAttack"
 2d_physics/layer_6="EnemyBodies"
+2d_physics/layer_7="EnemyAlerts"
+2d_physics/layer_8="BombExplosion"
 2d_physics/layer_9="NestBombLocation"
 2d_physics/layer_10="Interactions"
 

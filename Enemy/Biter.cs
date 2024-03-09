@@ -45,6 +45,7 @@ public partial class Biter : Node2D
 	{
 		InitialVector = target.GlobalPosition - GlobalPosition;
 		GetTree().CreateTimer(ForeSwing).Timeout += () => AttackActive(target);
+		GetTree().CreateTimer(2*ForeSwing/3).Timeout += () => {InitialVector = target.GlobalPosition - GlobalPosition;};
 		GetTree().CreateTimer(ForeSwing+ActiveFrames).Timeout += () => AttackComplete();
 		GetTree().CreateTimer(ForeSwing+ActiveFrames+NLagg).Timeout += () => GetParent()?.Call("AttackComplete");
 		GetTree().CreateTimer(ForeSwing+ActiveFrames+NLagg+AttackOnCooldown).Timeout += () => GetParent()?.Call("AttackCooldownComplete");

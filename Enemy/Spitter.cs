@@ -39,6 +39,7 @@ public partial class Spitter : Node2D
 	{
 		InitialVector = target.GlobalPosition - GlobalPosition;
 		GetTree().CreateTimer(ForeSwing).Timeout += () => AttackActive(target);
+		GetTree().CreateTimer(ForeSwing/2).Timeout += () => {InitialVector = target.GlobalPosition - GlobalPosition;};
 		GetTree().CreateTimer(ForeSwing+ActiveFrames).Timeout += () => AttackComplete();
 		GetTree().CreateTimer(ForeSwing+ActiveFrames+NLagg).Timeout += () => GetParent()?.Call("AttackComplete");
 		GetTree().CreateTimer(ForeSwing+ActiveFrames+NLagg+AttackOnCooldown).Timeout += () => GetParent()?.Call("AttackCooldownComplete");

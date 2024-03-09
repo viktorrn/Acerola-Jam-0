@@ -13,7 +13,6 @@ region = Rect2(228, 116, 8, 8)
 
 [node name="Spit" type="CharacterBody2D"]
 collision_layer = 17
-collision_mask = 0
 script = ExtResource("1_se34i")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

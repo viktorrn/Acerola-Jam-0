@@ -81,6 +81,7 @@ scale = Vector2(0.998054, 0.998143)
 position = Vector2(504.981, 420.26)
 rotation = 8.23963e-05
 scale = Vector2(0.998054, 0.998143)
+EnemyType = "Spitter"
 ForceSpawnAmount = 2
 
 [node name="SimpleNest2" parent="Base Layer" instance=ExtResource("9_gmy4w")]

@@ -55,12 +55,13 @@ public partial class Enemy : CharacterBody2D
         navAgent = GetNode("NavAgent") as NavigationAgent2D;
 		spriteNode = GetNode("Sprite") as Node2D;
 		animPlayer = spriteNode.GetNode("AnimationPlayer") as AnimationPlayer;
-		alertArea = GetNode("AlertArea") as Area2D;
+		
 		
 		Handler = GetNode("Handler") as Node2D;
 
 		
 		Health health = GetNode("HurtBox") as Health;
+		health.SetUpHealth((int)Handler.Get("MaxHealth"));
 		health.OnHit += ApplyDamage;
 		health.OnDied += Kill;
 
@@ -218,7 +219,6 @@ public override void _Draw()
 	public void DisableCollision()
 	{
 		CollisionLayer = 0;
-		CollisionMask = 0;
 	}
 
 	public void ApplyDamage(Vector2 forceDirection, float force)

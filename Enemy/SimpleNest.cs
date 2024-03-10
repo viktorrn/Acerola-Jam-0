@@ -15,10 +15,10 @@ public partial class SimpleNest : StaticBody2D
 	[Export] public int ForceSpawnAmount = 3;
 
 	private PackedScene packedScene; 
-	private List<Enemy> enemies = new List<Enemy>();
+	private List<Enemy> enemies = new();
 
 	private bool NoEnemies = true;
-	private List<Vector2> SpawnLocation = new List<Vector2>();
+	private List<Vector2> SpawnLocation = new();
 	private Timer timer;
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -33,8 +33,8 @@ public partial class SimpleNest : StaticBody2D
 		timer = GetNode<Timer>("SpawnTimer");
 		timer.WaitTime = SpawnTimer;
 		timer.Timeout += () => { CheckToSpawn(); timer.Start(); };
-		AddToGroup("Nest");
-		packedScene = GD.Load<PackedScene>("res://Enemy/" + EnemyType + ".tscn");
+		AddToGroup("DestructionTerrain");
+		packedScene = GD.Load<PackedScene>("res://Enemy/" + EnemyType + "/" + EnemyType + ".tscn");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

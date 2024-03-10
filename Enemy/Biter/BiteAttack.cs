@@ -13,7 +13,6 @@ public partial class BiteAttack : Area2D
 	// Called when the node enters the scene tree for the first time.
 	public int HitTarget(Node2D enemy)
 	{
-		GD.Print("Bite Attack");
 		return Damage;
 	}
 

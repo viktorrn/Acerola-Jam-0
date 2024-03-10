@@ -18,7 +18,7 @@ public partial class NestBomb : CharacterBody2D
     private Area2D BombArea;
 
     private List<Area2D> Targets = new();
-    private List<Health> Nests = new();
+    private List<Health> DestructionTerrain = new();
 
     private RayCast2D ray;
 
@@ -50,7 +50,7 @@ public partial class NestBomb : CharacterBody2D
     private void BombAreaEnterd(Area2D area)
     {
         if(!area.IsInGroup("Health")) return;
-        if(area.GetParent().IsInGroup("Nest")) { Nests?.Add(area as Health); return; }
+        if(area.GetParent().IsInGroup("DestructionTerrain")) { DestructionTerrain?.Add(area as Health); return; }
         if(Targets.Contains(area as Health)) return;
         Targets?.Add(area as Health);
     }
@@ -91,6 +91,7 @@ public partial class NestBomb : CharacterBody2D
         
         CanBePickedUp = false;
         CanBeInteracted = true;
+        prompt.GetNode<Label>("Label").Text = "Start Sequence [E]";
     }
     
     public void Interact(){
@@ -119,7 +120,7 @@ public partial class NestBomb : CharacterBody2D
             //CallDeferred(nameof(BlowToBits),target);   
         }
 
-        foreach(Health target in Nests)
+        foreach(Health target in DestructionTerrain)
         {
             BlowToBits(target);
         }

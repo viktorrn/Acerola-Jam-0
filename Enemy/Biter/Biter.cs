@@ -12,7 +12,12 @@ public partial class Biter : Node2D
 	[Export] public float TargetRange = 200.0f;
 	
 	[Export] public float AttackRange = 40;
+
+	[Export] public int AttackReach = 10;
+
 	[Export] public int LunghRange = 220;
+
+	
 
 	[Export] public int Damage = 5;
 	[Export] public float Force = 60;
@@ -37,6 +42,7 @@ public partial class Biter : Node2D
 		hitBox.Monitorable = false;
 		hitBox.Visible = false;
 		hitBox.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = true;
+		
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -45,7 +51,7 @@ public partial class Biter : Node2D
 	{
 		InitialVector = target.GlobalPosition - GlobalPosition;
 		GetTree().CreateTimer(ForeSwing).Timeout += () => AttackActive(target);
-		GetTree().CreateTimer(2*ForeSwing/3).Timeout += () => {InitialVector = target.GlobalPosition - GlobalPosition;};
+		GetTree().CreateTimer(ForeSwing/2).Timeout += () => {InitialVector = target.GlobalPosition - GlobalPosition;};
 		GetTree().CreateTimer(ForeSwing+ActiveFrames).Timeout += () => AttackComplete();
 		GetTree().CreateTimer(ForeSwing+ActiveFrames+NLagg).Timeout += () => GetParent()?.Call("AttackComplete");
 		GetTree().CreateTimer(ForeSwing+ActiveFrames+NLagg+AttackOnCooldown).Timeout += () => GetParent()?.Call("AttackCooldownComplete");
@@ -61,7 +67,7 @@ public partial class Biter : Node2D
 
 		(hitBox as BiteAttack).ForceDirection = direction;
 		
-		hitBox.GlobalPosition = GlobalPosition + direction * Math.Clamp(target.GlobalPosition.DistanceTo(GlobalPosition), 0, AttackRange);
+		hitBox.GlobalPosition = GlobalPosition + direction * AttackReach;
 		hitBox.Monitorable = true;
 		hitBox.Visible = true;
 		hitBox.GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;

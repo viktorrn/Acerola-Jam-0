@@ -9,6 +9,7 @@ public partial class BaseGun : CharacterBody2D
     public string WeaponName = "BaseGun";
 
     public int CurrentAmmo = 0;
+    public int MaxAmmo = 0;
     public  int MagAmount = 0;
     private int WeaponType = 0; // 0 is primary, 1 is secondary, 3 is granade 
 
@@ -22,6 +23,7 @@ public partial class BaseGun : CharacterBody2D
 
     private Control prompt;
 
+     
 
     override public void _Ready()
     {

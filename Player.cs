@@ -51,6 +51,10 @@ public partial class Player : CharacterBody2D
 	private ProgressBar healthBar;
 	private ProgressBar staminaBar;
 
+	private ProgressBar AmmoBar;
+
+	private Label MagLabel;
+
 	private Timer staminaRegenTimer;
 
 	private bool SwappingItem = false;
@@ -97,6 +101,11 @@ public partial class Player : CharacterBody2D
 		AddChild(staminaRegenTimer);
 		staminaRegenTimer.Timeout += () => StaminaCanRegen = true;
 
+	
+		MagLabel = GetNode("Control").GetNode("Mag") as Label;
+		
+		MagLabel.Visible = false;
+
     }
 
     public override void _Process(double delta)
@@ -107,6 +116,7 @@ public partial class Player : CharacterBody2D
 		LookVector = LookVector.Lerp(DesiredLookVector, (float)delta*WeaponSnapSpeed);
 		
 
+		UpdateAmmo();
 		int oldItemIndex = itemIndex;
 
 		if(!SwappingItem)
@@ -135,6 +145,7 @@ public partial class Player : CharacterBody2D
 		
 		foreach(var i in interactionsInRange)
 		{
+			if(i == null) {interactionsInRange.Remove(i); continue;}
 			i?.Call("HidePrompt");
 		}
 		
@@ -201,7 +212,11 @@ public partial class Player : CharacterBody2D
 
 		if(Input.IsActionJustPressed("Reload")){
 			GD.Print("Reloading");
-			inventory[itemIndex]?.Call("Reload");
+			if((int)inventory[itemIndex].Get("MagAmount") > 0)
+			{
+				inventory[itemIndex]?.Call("Reload");
+			}
+			
 			return;
 		}
 		
@@ -225,6 +240,19 @@ public partial class Player : CharacterBody2D
 		}
     }
 
+		private void UpdateAmmo()
+		{
+			if(inventory[itemIndex] == null || itemIndex == 3){
+			
+				MagLabel.Visible = false;
+				return;
+			}
+		
+			MagLabel.Visible = true;
+			int ammo = (int)inventory[itemIndex].Get("CurrentAmmo");
+	
+	        MagLabel.Text = ((int)inventory[itemIndex].Get("MagAmount") - 1).ToString() + " | " + ammo.ToString();
+		}
 	private void DropCurrentHeldWeapon(int index){
 		if(inventory[index] is null) return;
 		inventory[index].GlobalPosition = GlobalPosition + new Vector2(0,10).Rotated(LookVector.Angle());

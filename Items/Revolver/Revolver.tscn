@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://bfgmvs468fqi"]
+
+[ext_resource type="Script" path="res://Items/BaseGun.cs" id="1_coeah"]
+[ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_4sssa"]
+[ext_resource type="PackedScene" uid="uid://c46gsafc54hsa" path="res://Items/Prompt.tscn" id="3_2x6sx"]
+[ext_resource type="Script" path="res://Items/Revolver/RevolverHandler.cs" id="4_t43qx"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3jhie"]
+radius = 6.0
+height = 20.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_odolg"]
+atlas = ExtResource("2_4sssa")
+region = Rect2(97, 20, 20, 12)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dqmv0"]
+radius = 11.0
+height = 46.0
+
+[node name="Revolver" type="CharacterBody2D"]
+position = Vector2(4, 2)
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_coeah")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_3jhie")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 1)
+texture = SubResource("AtlasTexture_odolg")
+
+[node name="Area2D" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_dqmv0")
+debug_color = Color(0.721569, 0.478431, 0, 0.419608)
+
+[node name="Prompt" parent="." instance=ExtResource("3_2x6sx")]
+visible = false
+offset_left = 8.0
+offset_top = -17.0
+offset_right = 8.0
+offset_bottom = -17.0
+
+[node name="Handler" type="Node2D" parent="."]
+script = ExtResource("4_t43qx")
+BulletSpeed = 200.0
+bulletOffset = 24

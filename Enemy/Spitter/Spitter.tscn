@@ -1,10 +1,9 @@
-[gd_scene load_steps=14 format=3 uid="uid://bd7xbm6j6vh8y"]
+[gd_scene load_steps=11 format=3 uid="uid://catj3vu7jq25q"]
 
-[ext_resource type="Script" path="res://Enemy/Enemy.cs" id="1_1bity"]
-[ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_5b2uh"]
-[ext_resource type="Script" path="res://Health.cs" id="3_nmdcd"]
-[ext_resource type="Script" path="res://Enemy/Biter.cs" id="4_31wfe"]
-[ext_resource type="Script" path="res://Enemy/BiteAttack.cs" id="5_bnsxk"]
+[ext_resource type="Script" path="res://Enemy/Enemy.cs" id="1_yv33m"]
+[ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_4dj5l"]
+[ext_resource type="Script" path="res://Health.cs" id="3_4kn0g"]
+[ext_resource type="Script" path="res://Enemy/Spitter/Spitter.cs" id="4_xx4a6"]
 
 [sub_resource type="Animation" id="Animation_7o1vt"]
 resource_name = "Attack"
@@ -27,29 +26,22 @@ _data = {
 }
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nfuiu"]
-atlas = ExtResource("2_5b2uh")
-region = Rect2(96, 132, 32, 28)
+atlas = ExtResource("2_4dj5l")
+region = Rect2(224, 128, 32, 32)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_04gl8"]
-radius = 7.0
+radius = 6.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s2wed"]
 radius = 11.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_gmdpc"]
-radius = 8.06226
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ttem2"]
-atlas = ExtResource("2_5b2uh")
-region = Rect2(64, 66, 14, 14)
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_a5w0a"]
 radius = 35.0143
 
-[node name="Biter" type="CharacterBody2D"]
-collision_layer = 96
-collision_mask = 45
-script = ExtResource("1_1bity")
+[node name="Spitter" type="CharacterBody2D"]
+collision_layer = 32
+collision_mask = 109
+script = ExtResource("1_yv33m")
 DebugDraw = false
 
 [node name="Sprite" type="Node2D" parent="."]
@@ -62,10 +54,11 @@ libraries = {
 }
 
 [node name="Sprite2D" type="Sprite2D" parent="Sprite"]
+position = Vector2(1, -10)
 texture = SubResource("AtlasTexture_nfuiu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1, 3)
+position = Vector2(0, 3)
 shape = SubResource("CircleShape2D_04gl8")
 
 [node name="HurtBox" type="Area2D" parent="."]
@@ -73,7 +66,7 @@ visible = false
 collision_layer = 128
 collision_mask = 4
 input_pickable = false
-script = ExtResource("3_nmdcd")
+script = ExtResource("3_4kn0g")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 position = Vector2(0, -1)
@@ -104,22 +97,13 @@ target_desired_distance = 16.0
 debug_enabled = true
 
 [node name="Handler" type="Node2D" parent="."]
-script = ExtResource("4_31wfe")
-
-[node name="HitBox" type="Area2D" parent="Handler"]
-collision_layer = 16
-collision_mask = 0
-script = ExtResource("5_bnsxk")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Handler/HitBox"]
-shape = SubResource("CircleShape2D_gmdpc")
-debug_color = Color(0.921569, 0.247059, 0.352941, 0.666667)
-
-[node name="Sprite2D" type="Sprite2D" parent="Handler/HitBox"]
-z_index = 6
-texture = SubResource("AtlasTexture_ttem2")
+script = ExtResource("4_xx4a6")
+MaxHealth = 6
+Damage = 1
+ProjectileSpeed = 300.0
 
 [node name="AlertArea" type="Area2D" parent="."]
+visible = false
 collision_layer = 0
 collision_mask = 64
 monitoring = false

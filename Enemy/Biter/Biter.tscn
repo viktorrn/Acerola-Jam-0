@@ -30,11 +30,13 @@ _data = {
 atlas = ExtResource("2_miygl")
 region = Rect2(96, 132, 32, 28)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_04gl8"]
-radius = 7.0
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_sk314"]
+radius = 4.0
+height = 16.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s2wed"]
-radius = 11.0
+radius = 6.0
+height = 18.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gmdpc"]
 radius = 8.06226
@@ -44,8 +46,8 @@ atlas = ExtResource("2_miygl")
 region = Rect2(64, 66, 14, 14)
 
 [node name="Biter" type="CharacterBody2D"]
-collision_layer = 32
-collision_mask = 109
+collision_layer = 96
+collision_mask = 9
 script = ExtResource("1_rhx27")
 DebugDraw = false
 
@@ -62,20 +64,30 @@ libraries = {
 texture = SubResource("AtlasTexture_nfuiu")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1, 3)
-shape = SubResource("CircleShape2D_04gl8")
+position = Vector2(3, 9)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_sk314")
 
 [node name="HurtBox" type="Area2D" parent="."]
-visible = false
 collision_layer = 128
 collision_mask = 4
 input_pickable = false
 script = ExtResource("3_b4n1t")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
-position = Vector2(0, -1)
+position = Vector2(-5, 1)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_s2wed")
+
+[node name="Shell" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+input_pickable = false
+script = ExtResource("3_b4n1t")
+Imortal = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Shell"]
+polygon = PackedVector2Array(0, 0, 3, -2, 11, -1, 12, 1, 9, 7, 1, 4)
 
 [node name="Control" type="Control" parent="."]
 visible = false
@@ -106,6 +118,7 @@ AttackReach = 20
 LunghRange = 300
 
 [node name="HitBox" type="Area2D" parent="Handler"]
+visible = false
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("5_h36hj")

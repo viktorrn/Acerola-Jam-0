@@ -36,7 +36,7 @@ public partial class Enemy : CharacterBody2D
 
 	private NavigationAgent2D navAgent;
 
-	private Area2D alertArea;
+	private Area2D AlertArea;
 
 	private Node2D spriteNode;
 
@@ -47,6 +47,9 @@ public partial class Enemy : CharacterBody2D
 	private RayCast2D LOS;
 
 	private Node2D Handler;
+
+	private bool AlertTriggerd = false;
+		
 	override public void _Ready()
 	{
 		Alive = true;
@@ -65,20 +68,67 @@ public partial class Enemy : CharacterBody2D
 		health.OnHit += ApplyDamage;
 		health.OnDied += Kill;
 
-		LOS = GetNode("LineOfSight") as RayCast2D;
+        if (GetNodeOrNull("Shell") is Health shell)	
+        {
+            shell.OnHit += ApplyDamage;
+
+        }
+
+        LOS = GetNode("LineOfSight") as RayCast2D;
 		LOS.Position = Vector2.Zero;
 
-
 		
+
+        AlertArea = new Area2D
+        {
+            CollisionMask = 0b100000,
+            Monitorable = true,
+            Name = "AlertArea"
+        };
+
+		CollisionShape2D shape = new()
+        {
+            Shape = new CircleShape2D { Radius = 200.0f }
+        };
+     
+		AlertArea.AddChild(shape);
+
+        AddChild(AlertArea);
+
+
+
+
     }
 	// Get the gravity from the project settings to be synced with RigidBody nodes.
 
+	private void FindAllies()
+	{
+		Godot.Collections.Array<Node2D> bodies = AlertArea.GetOverlappingBodies();
+		foreach (Node2D body in bodies)
+		{
+			if (body is Enemy enemy)
+			{
+				enemy.Alerted();
+			}
+		}
+	}
+
 	public override void _PhysicsProcess(double delta)
 	{
+		
+		if (AlertTriggerd)
+		{
+			AlertTriggerd = false;
+			CallDeferred(nameof(FindAllies));
+		}
+
 		FrameDelta = (float)delta;
-		if(Alive){
+		if (Alive)
+		{
 			AliveState();
-		} else {
+		}
+		else
+		{
 			(GetNode("Control") as Control).Visible = true;
 			DeisredVelocity = Vector2.Zero;
 		}
@@ -135,14 +185,7 @@ public override void _Draw()
 
 				if(LOS.IsColliding()) return;
 
-				AngleToReach = (Player.GlobalPosition - Position).Angle() - (float)Handler.Call("TargetAngle");
-				Target = Player;
-				LostTarget = false;
-				(Target as Player).OnPlayerDied += () => {
-					Target = null;
-					LostTarget = true;
-					DeisredVelocity = Vector2.Zero;
-				};
+				Alerted();
 			}
 		} else {
 			ChaseState();
@@ -186,7 +229,6 @@ public override void _Draw()
 
 	public void AttackComplete()
 	{
-	
 		InAttackState = false;
 		AngleToReach = (Player.GlobalPosition - Position).Angle() + (float)Handler.Call("TargetAngle");
 	}
@@ -223,11 +265,25 @@ public override void _Draw()
 
 	public void ApplyDamage(Vector2 forceDirection, float force)
 	{
-
 		TakeDamage = true;
-		Velocity += forceDirection*force;
-		Velocity = Velocity.Length() > 2000 ? Velocity.Normalized() * 200 : Velocity;
+		Velocity = forceDirection*force*(1-(float)Handler.Get("KnockBackResistance"));
+		
 		Target = Player;
+		AlertTriggerd = true;
+	
+	}
+
+	public void Alerted()
+	{
+		// play alert animation
+		Target = Player;
+		AngleToReach = (Player.GlobalPosition - Position).Angle() - (float)Handler.Call("TargetAngle");
+		LostTarget = false;
+		(Target as Player).OnPlayerDied += () => {
+			Target = null;
+			LostTarget = true;
+			DeisredVelocity = Vector2.Zero;
+		};
 	}
 
 

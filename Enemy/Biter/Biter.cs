@@ -8,6 +8,8 @@ public partial class Biter : Node2D
 
 	[Export] public float Speed = 130.0f;
 
+	[Export] public float KnockBackResistance = 0.4f;
+
 	[ExportCategory("Attack")]
 	[Export] public float TargetRange = 200.0f;
 	

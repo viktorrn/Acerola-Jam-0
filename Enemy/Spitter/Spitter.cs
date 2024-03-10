@@ -7,6 +7,8 @@ public partial class Spitter : Node2D
 
 	[Export] public float Speed = 90.0f;
 
+	[Export] public float KnockBackResistance = 0.1f;
+
 
 	[ExportCategory("Attack")]
 	[Export] public float AttackRange = 80.0f;

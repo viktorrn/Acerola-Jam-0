@@ -120,6 +120,7 @@ Reload={
 2d_physics/layer_8="BombExplosion"
 2d_physics/layer_9="NestBombLocation"
 2d_physics/layer_10="Interactions"
+2d_physics/layer_11="Armor"
 
 [navigation]
 

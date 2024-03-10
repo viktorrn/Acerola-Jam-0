@@ -34,13 +34,14 @@ radius = 6.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s2wed"]
 radius = 11.0
+height = 26.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_a5w0a"]
 radius = 35.0143
 
 [node name="Spitter" type="CharacterBody2D"]
-collision_layer = 32
-collision_mask = 109
+collision_layer = 96
+collision_mask = 9
 script = ExtResource("1_yv33m")
 DebugDraw = false
 
@@ -69,7 +70,7 @@ input_pickable = false
 script = ExtResource("3_4kn0g")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
-position = Vector2(0, -1)
+position = Vector2(3, -6)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_s2wed")
 
@@ -99,6 +100,7 @@ debug_enabled = true
 [node name="Handler" type="Node2D" parent="."]
 script = ExtResource("4_xx4a6")
 MaxHealth = 6
+AttackRange = 140.0
 Damage = 1
 ProjectileSpeed = 300.0
 

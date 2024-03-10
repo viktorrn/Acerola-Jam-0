@@ -61,6 +61,7 @@ public partial class Player : CharacterBody2D
 
 	[Signal] public delegate void OnPlayerDiedEventHandler();
 
+	private Area2D AlertArea;
 	
 
 	private int itemIndex = 0;
@@ -106,7 +107,36 @@ public partial class Player : CharacterBody2D
 		
 		MagLabel.Visible = false;
 
+		AlertArea = new Area2D
+        {
+            CollisionMask = 0b100000,
+            Monitorable = true,
+            Name = "AlertArea"
+        };
+
+		CollisionShape2D shape = new()
+        {
+            Shape = new CircleShape2D { Radius = 400.0f }
+        };
+     
+		AlertArea.AddChild(shape);
+
+        AddChild(AlertArea);
+
     }
+
+	private void AlertEnemies()
+	{
+		Godot.Collections.Array<Node2D> bodies = AlertArea.GetOverlappingBodies();
+		foreach (Node2D body in bodies)
+		{
+			if (body is Enemy enemy)
+			{
+				enemy.Alerted();
+			}
+		}
+	}
+
 
     public override void _Process(double delta)
     {	
@@ -232,6 +262,8 @@ public partial class Player : CharacterBody2D
 				GD.Print("Out of ammo");
 				return;
 				}
+
+				CallDeferred(nameof(AlertEnemies));
 			}
 			catch(Exception e)
 			{

@@ -6,6 +6,8 @@ public partial class Health : Area2D
 	
 	private int MaxHealth = 20;
 	private int CurrentHealth = 20;
+
+	[Export] bool Imortal = false;
 	private System.Collections.Generic.List<Area2D> areaList;
 
 	[Signal] public delegate void OnDiedEventHandler();
@@ -32,15 +34,16 @@ public partial class Health : Area2D
 
 	public void HandleAttack(Node body)
 	{
-
+		
 		if(body.IsInGroup("Attack"))
 		{
 			
 			int damage = (int)body?.Call("HitTarget",this);
 			EmitSignal(nameof(OnHit),body.Get("ForceDirection"),body.Get("Force"));
-		
+
 			//areaList.Add(body as Area2D);
 			//GetTree().CreateTimer(0.2f).Timeout += () => RemoveArea(body as Area2D);
+			if(Imortal) return;
 
 			CurrentHealth -= damage;
 			CurrentHealth = Math.Clamp(CurrentHealth,0,MaxHealth);

@@ -51,9 +51,9 @@ offset_bottom = -17.0
 
 [node name="Handler" type="Node2D" parent="."]
 script = ExtResource("4_nip30")
-BulletSpeed = 2500.0
+BulletSpeed = 1200.0
 bulletOffset = 56
-FireRate = 0.1
-ReloadTime = 0.1
-Damage = 25
-MagSize = 50
+FireRate = 0.7
+ReloadTime = 0.8
+MagSize = 8
+MaxMagAmount = 40

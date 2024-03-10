@@ -30,3 +30,7 @@ res://Props/DestructWall.cs
 res://Enemy/Biter/Biter.tscn
 res://Enemy/Charger/Charger.tscn
 res://Enemy/Spitter/Spitter.tscn
+res://Items/Sniper/Sniper.tscn
+res://Items/Sniper/SniperBullet.tscn
+res://Player.tscn
+res://Items/Shotgun/Slug.tscn

@@ -58,7 +58,7 @@ public partial class Spitter : Node2D
 		spit.Speed = ProjectileSpeed;
 		spit.Damage = Damage;
 		spit.Force = Force;
-		GetTree().Root.GetNode("world").AddChild(spit);
+		GetTree().Root.GetNode(Utils.WorldPath).AddChild(spit);
 	
 	}
 

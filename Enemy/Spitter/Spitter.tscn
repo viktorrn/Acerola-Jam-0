@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://catj3vu7jq25q"]
+[gd_scene load_steps=13 format=3 uid="uid://catj3vu7jq25q"]
 
 [ext_resource type="Script" path="res://Enemy/Enemy.cs" id="1_yv33m"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_4dj5l"]
 [ext_resource type="Script" path="res://Health.cs" id="3_4kn0g"]
+[ext_resource type="Texture2D" uid="uid://cb8o8ajre0dgy" path="res://LightSpot.tres" id="3_dxm2r"]
 [ext_resource type="Script" path="res://Enemy/Spitter/Spitter.cs" id="4_xx4a6"]
 
 [sub_resource type="Animation" id="Animation_7o1vt"]
@@ -39,9 +40,12 @@ height = 26.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_a5w0a"]
 radius = 35.0143
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_28psl"]
+polygon = PackedVector2Array(-3, -5, -3, -1, -1, 1, 4, 1, 10, -5, 13, -15, 6, -16)
+
 [node name="Spitter" type="CharacterBody2D"]
 collision_layer = 96
-collision_mask = 9
+collision_mask = 41
 script = ExtResource("1_yv33m")
 DebugDraw = false
 
@@ -57,6 +61,38 @@ libraries = {
 [node name="Sprite2D" type="Sprite2D" parent="Sprite"]
 position = Vector2(1, -10)
 texture = SubResource("AtlasTexture_nfuiu")
+
+[node name="PointLight2D3" type="PointLight2D" parent="Sprite/Sprite2D"]
+position = Vector2(9.6, 6.6)
+color = Color(0.6875, 0.996094, 0.34375, 1)
+energy = 0.4
+texture = ExtResource("3_dxm2r")
+texture_scale = 0.05
+
+[node name="ShadowLight2" type="PointLight2D" parent="Sprite/Sprite2D"]
+position = Vector2(9.6, 6.6)
+color = Color(0.580392, 0.964706, 0.317647, 1)
+energy = 0.4
+range_item_cull_mask = 2
+shadow_enabled = true
+texture = ExtResource("3_dxm2r")
+texture_scale = 0.05
+
+[node name="PointLight2D2" type="PointLight2D" parent="Sprite/Sprite2D"]
+position = Vector2(-9.4, 8.6)
+color = Color(0.6875, 0.996094, 0.34375, 1)
+energy = 0.4
+texture = ExtResource("3_dxm2r")
+texture_scale = 0.05
+
+[node name="ShadowLight" type="PointLight2D" parent="Sprite/Sprite2D"]
+position = Vector2(-9.4, 8.6)
+color = Color(0.580392, 0.964706, 0.317647, 1)
+energy = 0.4
+range_item_cull_mask = 2
+shadow_enabled = true
+texture = ExtResource("3_dxm2r")
+texture_scale = 0.05
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)
@@ -116,3 +152,6 @@ shape = SubResource("CircleShape2D_a5w0a")
 [node name="LineOfSight" type="RayCast2D" parent="."]
 target_position = Vector2(0, 0)
 collide_with_areas = true
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_28psl")

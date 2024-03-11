@@ -21,7 +21,7 @@ public partial class Biter : Node2D
 
 	
 
-	[Export] public int Damage = 5;
+	[Export] public int Damage = 2;
 	[Export] public float Force = 60;
 	
 	[ExportCategory("Attack Timings")]

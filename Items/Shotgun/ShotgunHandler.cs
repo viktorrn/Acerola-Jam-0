@@ -41,7 +41,7 @@ public partial class ShotgunHandler : Node2D
             bulletInstance.Speed = BulletSpeed;
             bulletInstance.Damage = Damage;
             bulletInstance.Force = Force;
-            GetTree().Root.CallDeferred("add_child",bulletInstance);
+            GetTree().Root.GetNode(Utils.WorldPath).CallDeferred("add_child",bulletInstance);
             
         }
 	}

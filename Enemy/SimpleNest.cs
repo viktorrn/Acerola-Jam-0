@@ -57,7 +57,7 @@ public partial class SimpleNest : StaticBody2D
 	private void SpawnEnemy()
 	{
 		Enemy enemy = (Enemy)packedScene.Instantiate();
-		GetTree().Root.GetNode("world").AddChild(enemy);
+		GetTree().Root.GetNode(Utils.WorldPath).AddChild(enemy);
 		enemies.Add(enemy);
 		
 		Vector2 direction = GlobalPosition.DirectionTo(SpawnLocation[Variant]);

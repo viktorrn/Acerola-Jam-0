@@ -1,5 +1,6 @@
 using System;
 
+
 public static class Utils
 {
     public static float Lerp(float a, float b, float t)
@@ -17,4 +18,7 @@ public static class Utils
 
         return b;
     }
+
+    
+    public const string WorldPath = "Game/SubViewportContainer/SubViewport/world";
 }

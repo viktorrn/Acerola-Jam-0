@@ -35,7 +35,8 @@ public partial class RevolverHandler : Node2D
         bulletInstance.Damage = Damage;
         bulletInstance.Force = Force;
         
-        GetTree().Root.CallDeferred("add_child",bulletInstance);
+
+        GetTree().Root.GetNode(Utils.WorldPath).CallDeferred("add_child",bulletInstance);
 		
 	}
 

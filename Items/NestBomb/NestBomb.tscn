@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://d11mx5x0k00n3"]
+[gd_scene load_steps=9 format=3 uid="uid://d11mx5x0k00n3"]
 
 [ext_resource type="Script" path="res://Items/NestBomb/NestBomb.cs" id="1_bkx3c"]
 [ext_resource type="PackedScene" uid="uid://c46gsafc54hsa" path="res://Items/Prompt.tscn" id="1_bxvgx"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_bo4os"]
+[ext_resource type="Texture2D" uid="uid://cb8o8ajre0dgy" path="res://LightSpot.tres" id="4_igd3d"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7c4k2"]
 radius = 4.0
@@ -17,7 +18,7 @@ radius = 9.99999
 height = 42.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tcspq"]
-radius = 500.0
+radius = 271.002
 
 [node name="NestBomb" type="CharacterBody2D"]
 collision_layer = 514
@@ -50,9 +51,8 @@ shape = SubResource("CapsuleShape2D_hxq1w")
 debug_color = Color(0.741176, 0.462745, 0.156863, 0.419608)
 
 [node name="BombArea" type="Area2D" parent="."]
-collision_layer = 0
+collision_layer = 128
 collision_mask = 128
-monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="BombArea"]
 shape = SubResource("CircleShape2D_tcspq")
@@ -61,3 +61,17 @@ debug_color = Color(0.968627, 0.160784, 0.203922, 0.419608)
 [node name="Ray" type="RayCast2D" parent="."]
 target_position = Vector2(0, 10)
 collide_with_areas = true
+
+[node name="PointLight2D2" type="PointLight2D" parent="."]
+color = Color(0.85098, 0.341176, 0.388235, 0.501961)
+energy = 0.4
+texture = ExtResource("4_igd3d")
+texture_scale = 0.1
+
+[node name="ShadowLight" type="PointLight2D" parent="."]
+color = Color(0.85098, 0.341176, 0.388235, 0.501961)
+energy = 0.4
+range_item_cull_mask = 2
+shadow_enabled = true
+texture = ExtResource("4_igd3d")
+texture_scale = 0.1

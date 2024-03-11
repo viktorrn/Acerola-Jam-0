@@ -1,8 +1,20 @@
-[gd_scene load_steps=19 format=3 uid="uid://bbon3jshxdqho"]
+[gd_scene load_steps=24 format=3 uid="uid://bbon3jshxdqho"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_su24c"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_pk0pl"]
+[ext_resource type="Texture2D" uid="uid://cb8o8ajre0dgy" path="res://LightSpot.tres" id="3_g322o"]
 [ext_resource type="Script" path="res://Health.cs" id="3_nl3fk"]
+[ext_resource type="PackedScene" uid="uid://d17icjkl2k0fr" path="res://Effects/Dust.tscn" id="5_jgx67"]
+
+[sub_resource type="Gradient" id="Gradient_l5o72"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ancl0"]
+gradient = SubResource("Gradient_l5o72")
+width = 1
+height = 1
+fill = 1
+fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_58nfe"]
 atlas = ExtResource("2_pk0pl")
@@ -60,13 +72,25 @@ bg_color = Color(1, 1, 1, 1)
 radius = 11.0
 height = 36.0
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_8fm28"]
+polygon = PackedVector2Array(-3, 8, 6, 8, 6, -3, -4, -3)
+
 [node name="Player" type="CharacterBody2D"]
-z_index = -1
-y_sort_enabled = true
+light_mask = 3
 collision_layer = 0
 collision_mask = 45
 script = ExtResource("1_su24c")
 SprintSpeed = 200.0
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+visible = false
+position = Vector2(-1, 0)
+scale = Vector2(300, 300)
+blend_mode = 2
+shadow_enabled = true
+shadow_color = Color(0.137255, 0.129412, 0.121569, 1)
+shadow_item_cull_mask = 3
+texture = SubResource("GradientTexture2D_ancl0")
 
 [node name="Legs" type="Node2D" parent="."]
 z_index = 2
@@ -79,11 +103,30 @@ metadata/_edit_lock_ = true
 
 [node name="Body" type="Node2D" parent="."]
 z_index = 3
+metadata/_edit_lock_ = true
 
 [node name="NestBomb" type="Sprite2D" parent="Body"]
 position = Vector2(0, -1)
 rotation = 0.165806
 texture = SubResource("AtlasTexture_u1wnb")
+metadata/_edit_lock_ = true
+
+[node name="PointLight2D2" type="PointLight2D" parent="Body/NestBomb"]
+position = Vector2(-10.0875, 0.621689)
+color = Color(0.85098, 0.341176, 0.388235, 0.501961)
+energy = 0.4
+texture = ExtResource("3_g322o")
+texture_scale = 0.1
+metadata/_edit_lock_ = true
+
+[node name="ShadowLight" type="PointLight2D" parent="Body/NestBomb"]
+position = Vector2(-10.0875, 0.621689)
+color = Color(0.85098, 0.341176, 0.388235, 0.501961)
+energy = 0.4
+range_item_cull_mask = 2
+shadow_enabled = true
+texture = ExtResource("3_g322o")
+texture_scale = 0.1
 metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="Body"]
@@ -154,6 +197,22 @@ texture = SubResource("AtlasTexture_umsxc")
 [node name="Hand2" type="Sprite2D" parent="Hand/NestBomb"]
 position = Vector2(15, 3)
 texture = SubResource("AtlasTexture_umsxc")
+
+[node name="PointLight2D2" type="PointLight2D" parent="Hand/NestBomb"]
+position = Vector2(8, 4)
+color = Color(0.85098, 0.341176, 0.388235, 0.501961)
+energy = 0.7
+texture = ExtResource("3_g322o")
+texture_scale = 0.1
+
+[node name="ShadowLight" type="PointLight2D" parent="Hand/NestBomb"]
+position = Vector2(13, 4)
+color = Color(0.85098, 0.341176, 0.388235, 1)
+energy = 0.7
+range_item_cull_mask = 2
+shadow_enabled = true
+texture = ExtResource("3_g322o")
+texture_scale = 0.1
 
 [node name="Revolver" type="Node2D" parent="Hand"]
 visible = false
@@ -263,3 +322,11 @@ position = Vector2(0, 11)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_cpyyb")
 debug_color = Color(0, 0.643137, 0.333333, 0.419608)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+show_behind_parent = true
+occluder = SubResource("OccluderPolygon2D_8fm28")
+sdf_collision = false
+
+[node name="Dust" parent="." instance=ExtResource("5_jgx67")]
+position = Vector2(2, 11)

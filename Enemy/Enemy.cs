@@ -1,6 +1,7 @@
 using Godot;
 using System;
 
+
 public partial class Enemy : CharacterBody2D
 {
 	public const float Speed = 130.0f;
@@ -53,7 +54,8 @@ public partial class Enemy : CharacterBody2D
 	override public void _Ready()
 	{
 		Alive = true;
-		Player = GetTree().Root.GetNode("world").GetNode("Player") as CharacterBody2D;
+		Player = GetTree().Root.GetNode(Utils.WorldPath).GetNode("Player") as CharacterBody2D;
+
 		TargetPosition = Position;
         navAgent = GetNode("NavAgent") as NavigationAgent2D;
 		spriteNode = GetNode("Sprite") as Node2D;
@@ -149,7 +151,7 @@ public partial class Enemy : CharacterBody2D
 
 public override void _Draw()
 {
-	DrawCircle(Vector2.Zero, (float)Handler.Get("AttackRange"), new Color(1,0,0,0.1f));
+	//DrawCircle(Vector2.Zero, (float)Handler.Get("AttackRange"), new Color(1,0,0,0.1f));
 }
 
     public void AliveState()
@@ -261,6 +263,14 @@ public override void _Draw()
 	public void DisableCollision()
 	{
 		CollisionLayer = 0;
+		Area2D shell = GetNodeOrNull<Area2D>("Shell");
+		if(shell != null)
+		{
+			shell.CollisionLayer = 0;
+			shell.CollisionMask = 0;
+			shell.Monitorable = false;
+			shell.Monitoring = false;
+		}
 	}
 
 	public void ApplyDamage(Vector2 forceDirection, float force)

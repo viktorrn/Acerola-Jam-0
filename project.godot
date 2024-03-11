@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Acerola Jam 0"
-run/main_scene="res://world.tscn"
+run/main_scene="res://Game.tscn"
 config/features=PackedStringArray("4.1", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -109,6 +109,7 @@ Reload={
 [layer_names]
 
 2d_render/layer_1="walls"
+2d_render/layer_2="draws_shadow"
 2d_physics/layer_1="Walls"
 2d_navigation/layer_1="RegularGround"
 2d_physics/layer_2="Items"

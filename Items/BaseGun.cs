@@ -68,13 +68,13 @@ public partial class BaseGun : CharacterBody2D
         if(IsReloading || MagAmount <= 0){return;}
         IsReloading = true;
         MagAmount--;
-        GetTree().CreateTimer((float)Handler.Get("ReloadTime")).Connect("timeout", new Callable(this,nameof(OnReloadTimeout)));
+        GetTree().CreateTimer((float)Handler.Get("ReloadTime")).Timeout += OnReloadTimeout; 
+  
  
     }
 
     private void OnReloadTimeout()
     {
-        GD.Print("Reloaded DONE!");
         CurrentAmmo = (int)Handler.Get("MagSize");
         IsReloading = false;
     }   
@@ -92,13 +92,14 @@ public partial class BaseGun : CharacterBody2D
 
     public void PickUp()
     {
-        Visible = false;
+        GetNode<Sprite2D>("Sprite2D").Visible = false;
         HidePrompt();
     }
 
     public void Drop()
     {
-        Visible = true;
+        GetNode<Sprite2D>("Sprite2D").Visible = true;
+       
     }
 
 }

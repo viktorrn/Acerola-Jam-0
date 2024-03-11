@@ -21,15 +21,16 @@ public partial class NestBomb : CharacterBody2D
     private List<Health> DestructionTerrain = new();
 
     private RayCast2D ray;
+    private Timer CountDownTimer = new Timer();
+
+    private PackedScene BombExplosion = GD.Load<PackedScene>("res://Effects/Explosion.tscn");
 
     public override void _Ready()
     {
         prompt = GetNode("Prompt") as Control;
         GetNode<Area2D>("Area2D").AreaEntered += (area) =>
         {
-            GD.Print("Inside Area");
            InsideArea = true;
-           GD.Print(area);
            BombArea = area;
         };
 
@@ -44,7 +45,12 @@ public partial class NestBomb : CharacterBody2D
         AddToGroup("Items");
         ray = GetNode("Ray") as RayCast2D;
         ray.Position = Vector2.Zero;
-    
+
+        CountDownTimer.OneShot = true;
+        CountDownTimer.WaitTime = 5.0f;
+        CountDownTimer.Timeout += FindTargets;
+        AddChild(CountDownTimer);
+
     }
 
     private void BombAreaEnterd(Area2D area)
@@ -68,7 +74,7 @@ public partial class NestBomb : CharacterBody2D
 
     public void ShowPrompt()
     {
-        if(!CanBeInteracted && !CanBePickedUp)return;
+        //if(!CanBeInteracted && !CanBePickedUp)return;
         prompt.Visible = true;
     }
 
@@ -97,7 +103,7 @@ public partial class NestBomb : CharacterBody2D
     public void Interact(){
         if(!CanBeInteracted) return;
         CanBeInteracted = false;
-        GetTree().CreateTimer(5f).Timeout += FindTargets;
+        CountDownTimer.Start();
     }
 
     public void FindTargets()
@@ -108,41 +114,69 @@ public partial class NestBomb : CharacterBody2D
 
     public override void _PhysicsProcess(double delta)
     {
+        if(!CountDownTimer.IsStopped()){
+            prompt.GetNode<Label>("Label").Text = CountDownTimer.TimeLeft.ToString("0.0");
+            prompt.Visible = true;
+        }
         if(!BlowUpTargets) return;
         BlowUpTargets = false;
 
-        foreach(Health target in Targets)
-        {
-            ray.TargetPosition = target.GlobalPosition - GlobalPosition;   
-            ray.ForceRaycastUpdate();
-            if(ray.IsColliding()) continue;
-            BlowToBits(target);
-            //CallDeferred(nameof(BlowToBits),target);   
-        }
+        Node2D explosion = BombExplosion.Instantiate<Node2D>();
+        explosion.GlobalPosition = GlobalPosition;
+        GetTree().Root.GetNode(Utils.WorldPath).AddChild(explosion);
 
-        foreach(Health target in DestructionTerrain)
-        {
-            BlowToBits(target);
-        }
+	
+		//Godot.Collections.Array<Node2D> bodies = BombArea.GetOverlappingBodies();
+        Godot.Collections.Array<Area2D> areas = (GetNode<Area2D>("BombArea") as Area2D).GetOverlappingAreas();
+        
+		foreach (Node2D area in areas)
+		{   
+            try{
+                if(area is not Health) continue;
+                if(area.GetParent().IsInGroup("DestructionTerrain")) { BlowToBits(area as Health); continue;}
+                
+                ray.TargetPosition = area.GlobalPosition - GlobalPosition;   
+                ray.ForceRaycastUpdate();
+            
+                
+                
+                if(ray.GetCollider() == null)
+                {
+                    BlowToBits(area as Health);
+                    continue;
+                }
+                else{
+                    if(ray.GetCollider() is StaticBody2D)
+                    {
+                        BlowToBits(area as Health);
+                    }
+                }
 
-        BombArea.GetParent().QueueFree();
-        QueueFree();
+            } catch(Exception e){
+               
+            }
+		}
+
+     
+        
+        GetTree().CreateTimer(0.5f).Timeout += () => {
+            BombArea.GetParent().QueueFree();
+            QueueFree();
+
+        };
 
     }
 
-   
 
+   
     public void BlowToBits(Health target)
     {
+   
+
         Vector2 direction = (target.GlobalPosition - GlobalPosition).Normalized();
         float force = 1500.0f;
         int damage = 1000;
         target.SmiteAttack(damage,direction,force);
-    }
-
-    public int HitTarget(Health target)
-    {
-        return 1000;
     }
 
 

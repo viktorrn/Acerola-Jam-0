@@ -19,7 +19,7 @@ public partial class SniperHandler : Node2D
     [Export]public int MagSize = 5;
     [Export]public int MaxMagAmount = 3;
 
-    public int WeaponType = 0; // 0 is primary, 1 is secondary, 3 is granade 
+    public int WeaponType = 2; // 0 is primary, 1 is secondary, 3 is granade 
 	PackedScene bulletScene = GD.Load<PackedScene>("res://Items/Sniper/SniperBullet.tscn");
 
 	public void SpawnBullet(Vector2 position, Vector2 direction)
@@ -35,7 +35,7 @@ public partial class SniperHandler : Node2D
         bulletInstance.Damage = Damage;
         bulletInstance.Force = Force;
         
-        GetTree().Root.CallDeferred("add_child",bulletInstance);
+        GetTree().Root.GetNode(Utils.WorldPath).CallDeferred("add_child",bulletInstance);
 		
 	}
 

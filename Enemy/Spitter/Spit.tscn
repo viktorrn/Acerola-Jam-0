@@ -53,6 +53,7 @@ script = ExtResource("1_se34i")
 shape = SubResource("CircleShape2D_2hixo")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(2, 2, 2, 1)
 position = Vector2(-1, 0)
 texture = SubResource("AtlasTexture_gi7qd")
 
@@ -67,9 +68,16 @@ lifetime = 0.4
 explosiveness = 0.1
 randomness = 0.1
 
+[node name="PointLight2D2" type="PointLight2D" parent="."]
+color = Color(0.580392, 0.964706, 0.317647, 1)
+energy = 0.5
+range_item_cull_mask = 2
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_24i5c")
+texture_scale = 1.9
+
 [node name="PointLight2D" type="PointLight2D" parent="."]
 color = Color(0.580392, 0.964706, 0.317647, 1)
 energy = 0.5
-shadow_enabled = true
 texture = SubResource("GradientTexture2D_24i5c")
 texture_scale = 1.9

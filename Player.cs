@@ -29,6 +29,8 @@ public partial class Player : CharacterBody2D
 
 	[Export] public float StaminaRegenCooldown = 1.0f;
 
+	[Export] public float AlertDistance = 200.0f;
+
 	public bool StaminaCanRegen = true;
 
 
@@ -60,8 +62,15 @@ public partial class Player : CharacterBody2D
 	private bool SwappingItem = false;
 
 	[Signal] public delegate void OnPlayerDiedEventHandler();
+	[Signal] public delegate void OnPlayerFireEventHandler();
+
+	PackedScene Sniper = GD.Load<PackedScene>("res://Items/Sniper/Sniper.tscn");
+	PackedScene Shotgun = GD.Load<PackedScene>("res://Items/Shotgun/Shotgun.tscn");
+	PackedScene Revolver = GD.Load<PackedScene>("res://Items/Revolver/Revolver.tscn");
 
 	private Area2D AlertArea;
+
+	private float TimePassed = 0.0f;
 	
 
 	private int itemIndex = 0;
@@ -79,6 +88,8 @@ public partial class Player : CharacterBody2D
 		interactionBox = GetNode("Interact") as Area2D;
 		interactionBox.BodyEntered += OnInteractionBodyEnterd;
 		interactionBox.BodyExited += OnInteractionBodyExited;
+
+	
 
 
 		hurtBox.SetUpHealth(MaxHealth);
@@ -116,14 +127,26 @@ public partial class Player : CharacterBody2D
 
 		CollisionShape2D shape = new()
         {
-            Shape = new CircleShape2D { Radius = 400.0f }
+            Shape = new CircleShape2D { Radius = AlertDistance }
         };
      
 		AlertArea.AddChild(shape);
 
         AddChild(AlertArea);
+		
 
     }
+
+	public void Spawn()
+	{
+		BaseGun sniper = (BaseGun)Sniper.Instantiate();
+		BaseGun shotgun = (BaseGun)Shotgun.Instantiate();
+		BaseGun revolver = (BaseGun)Revolver.Instantiate();
+		
+		AddChild(sniper);
+		AddChild(shotgun);
+		AddChild(revolver);
+	}
 
 	private void AlertEnemies()
 	{
@@ -145,6 +168,11 @@ public partial class Player : CharacterBody2D
 		DesiredLookVector = GetGlobalMousePosition() - head.GlobalPosition;
 		LookVector = LookVector.Lerp(DesiredLookVector, (float)delta*WeaponSnapSpeed);
 		
+		TimePassed += (float)delta;
+
+		if(TimePassed > 100000.0f) {
+			TimePassed = 0.0f;
+		}
 
 		UpdateAmmo();
 		int oldItemIndex = itemIndex;
@@ -232,9 +260,9 @@ public partial class Player : CharacterBody2D
 			if(itemIndex == 3 && (bool)inventory[3]?.Get("InsideArea"))	
 			{
 				interactionsInRange.Add(inventory[3]);
-			}
+				DropCurrentHeldWeapon(itemIndex);
+			} 
 			
-			DropCurrentHeldWeapon(itemIndex);
 
 			return;
 		}
@@ -242,7 +270,7 @@ public partial class Player : CharacterBody2D
 
 		if(Input.IsActionJustPressed("Reload")){
 			GD.Print("Reloading");
-			if((int)inventory[itemIndex].Get("MagAmount") > 0)
+			if((int)inventory[itemIndex].Get("MagAmount") > 0 && !(bool)inventory[itemIndex].Get("IsReloading"))
 			{
 				inventory[itemIndex]?.Call("Reload");
 			}
@@ -272,19 +300,19 @@ public partial class Player : CharacterBody2D
 		}
     }
 
-		private void UpdateAmmo()
-		{
-			if(inventory[itemIndex] == null || itemIndex == 3){
-			
-				MagLabel.Visible = false;
-				return;
-			}
+	private void UpdateAmmo()
+	{
+		if(inventory[itemIndex] == null || itemIndex == 3){
 		
-			MagLabel.Visible = true;
-			int ammo = (int)inventory[itemIndex].Get("CurrentAmmo");
-	
-	        MagLabel.Text = ((int)inventory[itemIndex].Get("MagAmount") - 1).ToString() + " | " + ammo.ToString();
+			MagLabel.Visible = false;
+			return;
 		}
+	
+		MagLabel.Visible = true;
+		int ammo = (int)inventory[itemIndex].Get("CurrentAmmo");
+
+		MagLabel.Text = Math.Clamp((int)inventory[itemIndex].Get("MagAmount") - 1,0,100).ToString() + " | " + ammo.ToString();
+	}
 	private void DropCurrentHeldWeapon(int index){
 		if(inventory[index] is null) return;
 		inventory[index].GlobalPosition = GlobalPosition + new Vector2(0,10).Rotated(LookVector.Angle());
@@ -400,6 +428,9 @@ public partial class Player : CharacterBody2D
 		if(inventory[itemIndex] == null) return;
 		
 		Vector2 WeaponPosition = Input.IsActionPressed("RMB") && !Input.IsActionPressed("Shift") ? Vector2.Zero : new(-2,5);
+		
+		WeaponPosition = (Input.IsActionPressed("Shift") && Stamina > 0.1f) ? new Vector2(-8+(float)Math.Sin(TimePassed*0.1)*3, 8) : WeaponPosition;
+		
 		Node2D Weapon = hand.GetNode(inventory[itemIndex].Get("WeaponName").ToString()) as Node2D;
 		Weapon.Position =  Weapon.Position.Lerp(WeaponPosition, 0.5f);
 
@@ -449,6 +480,7 @@ public partial class Player : CharacterBody2D
 		// could be optimized
 		hand.GetChildren().Cast<Node>().ToList().ForEach(c => (c as Node2D).Visible = false);
 
+
 		if(inventory[itemIndex] == null) return;
 		(hand.GetNode(inventory[itemIndex].Get("WeaponName").ToString()) as Node2D).Visible = true;
 		switch(inventory[itemIndex].Get("WeaponName").ToString())
@@ -456,6 +488,8 @@ public partial class Player : CharacterBody2D
 			case "Sniper":
 				break;
 			case "Shotgun":
+				break;
+			case "Revolver":
 				break;
 			case "NestBomb":
 				break;

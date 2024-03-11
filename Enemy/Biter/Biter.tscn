@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://bd7xbm6j6vh8y"]
+[gd_scene load_steps=15 format=3 uid="uid://bd7xbm6j6vh8y"]
 
 [ext_resource type="Script" path="res://Enemy/Enemy.cs" id="1_rhx27"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_miygl"]
+[ext_resource type="Texture2D" uid="uid://cb8o8ajre0dgy" path="res://LightSpot.tres" id="3_6kjra"]
 [ext_resource type="Script" path="res://Health.cs" id="3_b4n1t"]
 [ext_resource type="Script" path="res://Enemy/Biter/Biter.cs" id="4_r461u"]
 [ext_resource type="Script" path="res://Enemy/Biter/BiteAttack.cs" id="5_h36hj"]
@@ -45,9 +46,13 @@ radius = 8.06226
 atlas = ExtResource("2_miygl")
 region = Rect2(64, 66, 14, 14)
 
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_458ol"]
+polygon = PackedVector2Array(-4, -3, -5, 4, 11, 7, 11, -2)
+
 [node name="Biter" type="CharacterBody2D"]
+light_mask = 3
 collision_layer = 96
-collision_mask = 9
+collision_mask = 41
 script = ExtResource("1_rhx27")
 DebugDraw = false
 
@@ -62,6 +67,22 @@ libraries = {
 
 [node name="Sprite2D" type="Sprite2D" parent="Sprite"]
 texture = SubResource("AtlasTexture_nfuiu")
+
+[node name="PointLight2D2" type="PointLight2D" parent="Sprite"]
+position = Vector2(-13.4, 5.6)
+color = Color(0.686275, 0.996078, 0.345098, 1)
+energy = 0.5
+texture = ExtResource("3_6kjra")
+texture_scale = 0.05
+
+[node name="ShadowLight" type="PointLight2D" parent="Sprite"]
+position = Vector2(-13.4, 5.6)
+color = Color(0.686275, 0.996078, 0.345098, 1)
+energy = 0.4
+range_item_cull_mask = 2
+shadow_enabled = true
+texture = ExtResource("3_6kjra")
+texture_scale = 0.05
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(3, 9)
@@ -84,10 +105,9 @@ collision_layer = 0
 collision_mask = 4
 input_pickable = false
 script = ExtResource("3_b4n1t")
-Imortal = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Shell"]
-polygon = PackedVector2Array(0, 0, 3, -2, 11, -1, 12, 1, 9, 7, 1, 4)
+polygon = PackedVector2Array(0, 0, 3, -2, 11, -1, 12, 1, 10, 6, 1, 4)
 
 [node name="Control" type="Control" parent="."]
 visible = false
@@ -134,3 +154,6 @@ texture = SubResource("AtlasTexture_ttem2")
 [node name="LineOfSight" type="RayCast2D" parent="."]
 target_position = Vector2(0, 0)
 collide_with_areas = true
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_458ol")

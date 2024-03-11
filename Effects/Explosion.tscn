@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://4dcyi2mtpiao"]
+
+[ext_resource type="Texture2D" uid="uid://b5yseyhotly7j" path="res://Explosion.png" id="1_66r7t"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gnpkm"]
+particles_animation = true
+particles_anim_h_frames = 6
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_t1cmy"]
+offsets = PackedFloat32Array(0, 0.301688, 0.727848, 0.873418, 1)
+colors = PackedColorArray(0.844092, 0.163066, 0, 1, 0.852664, 0.510542, 0.238546, 1, 0.419608, 0.419608, 0.419608, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ujkmm"]
+gradient = SubResource("Gradient_t1cmy")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_48lah"]
+emission_shape = 1
+emission_sphere_radius = 90.0
+spread = 180.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 5.0
+initial_velocity_max = 50.0
+damping_min = 5.0
+damping_max = 20.0
+scale_min = 0.5
+scale_max = 6.0
+color_ramp = SubResource("GradientTexture1D_ujkmm")
+turbulence_noise_speed_random = 0.62
+anim_speed_min = 0.8
+anim_speed_max = 1.72
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Explosion" type="GPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_gnpkm")
+amount = 12
+sub_emitter = NodePath(".")
+process_material = SubResource("ParticleProcessMaterial_48lah")
+texture = ExtResource("1_66r7t")
+lifetime = 1.2
+randomness = 0.25
+draw_order = 2

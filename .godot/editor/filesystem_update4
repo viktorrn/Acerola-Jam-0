@@ -34,3 +34,7 @@ res://Items/Sniper/Sniper.tscn
 res://Items/Sniper/SniperBullet.tscn
 res://Player.tscn
 res://Items/Shotgun/Slug.tscn
+res://Effects/Explosion.tscn
+res://Effects/Dust.tscn
+res://Effects/GunFire.tscn
+res://Effects/Circle.tscn

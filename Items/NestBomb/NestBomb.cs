@@ -20,6 +20,8 @@ public partial class NestBomb : CharacterBody2D
     private List<Area2D> Targets = new();
     private List<Health> DestructionTerrain = new();
 
+    private PlayerCamera Camera;
+
     private RayCast2D ray;
     private Timer CountDownTimer = new Timer();
 
@@ -50,6 +52,7 @@ public partial class NestBomb : CharacterBody2D
         CountDownTimer.WaitTime = 5.0f;
         CountDownTimer.Timeout += FindTargets;
         AddChild(CountDownTimer);
+        Camera = GetTree().Root.GetNode(Utils.WorldPath).GetNode<PlayerCamera>("Camera2D");
 
     }
 
@@ -138,7 +141,7 @@ public partial class NestBomb : CharacterBody2D
                 ray.TargetPosition = area.GlobalPosition - GlobalPosition;   
                 ray.ForceRaycastUpdate();
             
-                
+                if(ray.TargetPosition.Length() < 130) { BlowToBits(area as Health); continue; };
                 
                 if(ray.GetCollider() == null)
                 {
@@ -157,14 +160,10 @@ public partial class NestBomb : CharacterBody2D
             }
 		}
 
-     
+        Camera.ShakeCamera(240.0f,12,4,true);
         
-        GetTree().CreateTimer(0.5f).Timeout += () => {
-            BombArea.GetParent().QueueFree();
-            QueueFree();
-
-        };
-
+        this.QueueFree();
+        BombArea.GetParent().QueueFree();
     }
 
 

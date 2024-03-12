@@ -10,7 +10,7 @@ public partial class BaseGun : CharacterBody2D
 
     public int CurrentAmmo = 0;
     public int MaxAmmo = 0;
-    public  int MagAmount = 0;
+
     private int WeaponType = 0; // 0 is primary, 1 is secondary, 3 is granade 
 
     public int ADSRange = 10;
@@ -23,19 +23,21 @@ public partial class BaseGun : CharacterBody2D
 
     private Control prompt;
 
+    private PlayerCamera Camera;
+
      
 
     override public void _Ready()
     {
         prompt = GetNode("Prompt") as Control;
         Handler = GetNode("Handler") as Node2D;
-        
+        Camera = GetTree().Root.GetNode(Utils.WorldPath).GetNode<PlayerCamera>("Camera2D");
         try{
 
             WeaponName = (string)Handler.Get("WeaponName");
             WeaponType = (int)Handler.Get("WeaponType");
             
-            MagAmount = (int)Handler.Get("MaxMagAmount");
+            
             CurrentAmmo = (int)Handler.Get("MagSize");
             ADSRange = (int)Handler.Get("ADSRange");
 
@@ -46,8 +48,10 @@ public partial class BaseGun : CharacterBody2D
 
     public int FireBullet(Vector2 position, Vector2 direction)
     {
-        if(!CanFire || IsReloading || MagAmount <= 0){return -1;}
+        if(!CanFire || IsReloading ){return -1;}
         if(CurrentAmmo <= 0){return 0;}
+
+        Camera.ShakeCamera((float)Handler.Get("FireForce"));        
 
         CurrentAmmo--;
         CanFire = false;
@@ -65,11 +69,9 @@ public partial class BaseGun : CharacterBody2D
 
     public void Reload()
     {
-        if(IsReloading || MagAmount <= 0){return;}
+        if(IsReloading){return;}
         IsReloading = true;
-        MagAmount--;
         GetTree().CreateTimer((float)Handler.Get("ReloadTime")).Timeout += OnReloadTimeout; 
-  
  
     }
 

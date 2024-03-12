@@ -60,7 +60,7 @@ public partial class SimpleNest : StaticBody2D
 		GetTree().Root.GetNode(Utils.WorldPath).AddChild(enemy);
 		enemies.Add(enemy);
 		
-		Vector2 direction = GlobalPosition.DirectionTo(SpawnLocation[Variant]);
+		Vector2 direction = GlobalPosition.DirectionTo(GlobalPosition + SpawnLocation[Variant]);
 		direction = direction.Rotated((float)GD.RandRange(-Math.PI / 4, Math.PI / 4));
 
 		enemy.GlobalPosition = GlobalPosition + SpawnLocation[Variant];

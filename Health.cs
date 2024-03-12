@@ -7,6 +7,10 @@ public partial class Health : Area2D
 	private int MaxHealth = 20;
 	private int CurrentHealth = 20;
 
+	public bool UsesHitStun = false;
+	private bool HitStun = false;
+	private float HitStunTime = 0.5f;
+
 	[Export] bool Imortal = false;
 	private System.Collections.Generic.List<Area2D> areaList;
 
@@ -34,17 +38,23 @@ public partial class Health : Area2D
 
 	public void HandleAttack(Node body)
 	{
-		
+		if(HitStun) return;
+
 		if(body.IsInGroup("Attack"))
 		{
-			
+
 			int damage = (int)body?.Call("HitTarget",this);
 			EmitSignal(nameof(OnHit),body.Get("ForceDirection"),body.Get("Force"));
 
 			//areaList.Add(body as Area2D);
 			//GetTree().CreateTimer(0.2f).Timeout += () => RemoveArea(body as Area2D);
 			if(Imortal) return;
-
+			
+			if(UsesHitStun) {
+				HitStun = true;
+				GetTree().CreateTimer(HitStunTime).Timeout += () => HitStun = false; 
+			}
+		
 			CurrentHealth -= damage;
 			CurrentHealth = Math.Clamp(CurrentHealth,0,MaxHealth);
 			EmitSignal(nameof(OnHealthChanged),CurrentHealth);

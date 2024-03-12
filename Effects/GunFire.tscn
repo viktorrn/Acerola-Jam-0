@@ -1,28 +1,37 @@
-[gd_scene load_steps=8 format=3 uid="uid://chkucma4gbmmx"]
+[gd_scene load_steps=18 format=3 uid="uid://c73wcvlixhbxq"]
 
+[ext_resource type="Texture2D" uid="uid://b07r2p375q3q2" path="res://muzzle.png" id="1_2stjy"]
+[ext_resource type="Script" path="res://Effects/GunFire.cs" id="1_g64or"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="1_qwhdu"]
+[ext_resource type="PackedScene" uid="uid://dcw1xnf31fgd0" path="res://bullet_trace.tscn" id="3_a6kh5"]
+[ext_resource type="Texture2D" uid="uid://cb8o8ajre0dgy" path="res://LightSpot.tres" id="3_gtei8"]
 
 [sub_resource type="Gradient" id="Gradient_6jtut"]
-offsets = PackedFloat32Array(0, 0.166667, 0.548523, 1)
-colors = PackedColorArray(1, 1, 1, 1, 0.996078, 0.72549, 0.392157, 1, 0.992347, 0.288868, 0.190639, 1, 0.980392, 0.980392, 0.980392, 0)
+offsets = PackedFloat32Array(0.246032, 0.373016, 0.640873, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.878969, 0.462924, 0.179258, 1, 0.87451, 0.443137, 0.14902, 1, 0.980392, 0.980392, 0.980392, 0)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_qunf4"]
 gradient = SubResource("Gradient_6jtut")
 
 [sub_resource type="Curve" id="Curve_daerk"]
-_data = [Vector2(0, 0.305263), 0.0, 0.0, 0, 0, Vector2(0.99802, 0.978947), 0.0, 0.0, 0, 0]
-point_count = 2
+max_value = 3.0
+_data = [Vector2(0, 0.0526316), 0.0, 0.0, 0, 0, Vector2(0.0666667, 0), 0.0, 0.0, 0, 0, Vector2(0.257713, 1.67368), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
 
 [sub_resource type="CurveTexture" id="CurveTexture_kuyl5"]
 curve = SubResource("Curve_daerk")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_5c30c"]
 particle_flag_disable_z = true
+spread = 50.0
+flatness = 0.5
 gravity = Vector3(0, 0, 0)
-initial_velocity_min = 2.0
-initial_velocity_max = 24.0
+initial_velocity_min = 40.0
+initial_velocity_max = 70.0
 orbit_velocity_min = 0.0
 orbit_velocity_max = 0.0
+damping_min = 40.0
+damping_max = 80.0
 scale_min = 0.5
 scale_max = 1.2
 scale_curve = SubResource("CurveTexture_kuyl5")
@@ -32,10 +41,83 @@ color_ramp = SubResource("GradientTexture1D_qunf4")
 atlas = ExtResource("1_qwhdu")
 region = Rect2(270, 15, 1, 1)
 
-[node name="GunFire" type="GPUParticles2D"]
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ui2jj"]
+particles_animation = true
+particles_anim_h_frames = 5
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Gradient" id="Gradient_i4aei"]
+offsets = PackedFloat32Array(0.189338, 0.623162, 0.884191, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.87451, 0.443137, 0.14902, 1, 0.629967, 0.18313, 0.18313, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_km1h1"]
+gradient = SubResource("Gradient_i4aei")
+
+[sub_resource type="Curve" id="Curve_fy4ng"]
+max_value = 2.0
+_data = [Vector2(0, 0.0105263), 0.0, 0.0, 0, 0, Vector2(0.117949, 1.81053), 0.0, 0.0, 0, 0, Vector2(1, 0.789474), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_rdu88"]
+curve = SubResource("Curve_fy4ng")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_q0dq2"]
+particle_flag_rotate_y = true
+particle_flag_disable_z = true
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 0.5
+initial_velocity_max = 4.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+scale_min = 0.9
+scale_max = 1.2
+scale_curve = SubResource("CurveTexture_rdu88")
+color_ramp = SubResource("GradientTexture1D_km1h1")
+anim_speed_min = 2.0
+anim_speed_max = 2.0
+
+[node name="GunFire" type="Node2D"]
+scale = Vector2(1.4, 1.4)
+script = ExtResource("1_g64or")
+
+[node name="L1" type="PointLight2D" parent="."]
+position = Vector2(3.2, 0.200001)
+color = Color(0.992157, 0.760784, 0.635294, 0.819608)
+energy = 0.6
+texture = ExtResource("3_gtei8")
+texture_scale = 0.7
+
+[node name="L2" type="PointLight2D" parent="."]
+position = Vector2(3.2, 0.200001)
+color = Color(0.992157, 0.760784, 0.635294, 0.819608)
+energy = 0.6
+range_item_cull_mask = 2
+shadow_enabled = true
+texture = ExtResource("3_gtei8")
+texture_scale = 0.7
+
+[node name="BulletTrace" parent="." instance=ExtResource("3_a6kh5")]
+
+[node name="GunFire" type="GPUParticles2D" parent="."]
+self_modulate = Color(1.6, 1.6, 1.6, 1)
+emitting = false
 amount = 18
-sub_emitter = NodePath(".")
 process_material = SubResource("ParticleProcessMaterial_5c30c")
 texture = SubResource("AtlasTexture_3ap6i")
-lifetime = 0.4
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+
+[node name="Muzzle" type="GPUParticles2D" parent="."]
+self_modulate = Color(1.6, 1.6, 1.6, 1)
+material = SubResource("CanvasItemMaterial_ui2jj")
+scale = Vector2(1.5, 1.5)
+skew = -1.56905
+emitting = false
+amount = 1
+process_material = SubResource("ParticleProcessMaterial_q0dq2")
+texture = ExtResource("1_2stjy")
+lifetime = 0.5
+one_shot = true
 explosiveness = 1.0

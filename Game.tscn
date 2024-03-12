@@ -1,18 +1,63 @@
-[gd_scene load_steps=3 format=3 uid="uid://bg487qxe5c12j"]
+[gd_scene load_steps=10 format=3 uid="uid://bg487qxe5c12j"]
 
+[ext_resource type="Shader" path="res://Game.gdshader" id="1_bqdgh"]
 [ext_resource type="Script" path="res://GameViewPort.cs" id="1_odyjd"]
 [ext_resource type="PackedScene" uid="uid://3lgeu5pudirm" path="res://world.tscn" id="2_j3ped"]
+[ext_resource type="Script" path="res://GameEffects.cs" id="2_wl7w0"]
+[ext_resource type="Script" path="res://StartLabel.cs" id="5_didpr"]
+
+[sub_resource type="Gradient" id="Gradient_uc63x"]
+offsets = PackedFloat32Array(0.0859189, 0.565632, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.282528, 0.282528, 0.282528, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_lapgo"]
+gradient = SubResource("Gradient_uc63x")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.991453)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mjqls"]
+resource_local_to_scene = true
+shader = ExtResource("1_bqdgh")
+shader_parameter/apply = true
+shader_parameter/amount = 0.5
+shader_parameter/offset_texture = SubResource("GradientTexture2D_lapgo")
+
+[sub_resource type="LabelSettings" id="LabelSettings_vcpp7"]
+font_size = 24
+shadow_size = 4
+shadow_color = Color(0, 0, 0, 1)
 
 [node name="Game" type="Node2D"]
 
-[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
-offset_right = 1600.0
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(1600, 900)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1603.0
 offset_bottom = 900.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-stretch = true
 
-[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Control"]
+material = SubResource("ShaderMaterial_mjqls")
+custom_minimum_size = Vector2(1600, 900)
+layout_direction = 1
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.576
+anchor_bottom = 1.667
+offset_right = -921.6
+offset_bottom = -600.3
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch_shrink = 2
+script = ExtResource("2_wl7w0")
+ShakeStrength = 2.0
+ShakeSpeed = 4.0
+ShakeDecay = 0.7
+
+[node name="SubViewport" type="SubViewport" parent="Control/SubViewportContainer"]
 disable_3d = true
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
@@ -22,4 +67,27 @@ size_2d_override_stretch = true
 render_target_update_mode = 4
 script = ExtResource("1_odyjd")
 
-[node name="world" parent="SubViewportContainer/SubViewport" instance=ExtResource("2_j3ped")]
+[node name="world" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_j3ped")]
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -121.5
+offset_top = -39.0
+offset_right = 121.5
+offset_bottom = 39.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 24
+text = "Walk With WASD, 
+Shoot with LMB, ADS with RMB,
+1,2,3,4 and Hotkeys
+Got it?"
+label_settings = SubResource("LabelSettings_vcpp7")
+script = ExtResource("5_didpr")

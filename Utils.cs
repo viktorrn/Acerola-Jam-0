@@ -20,5 +20,5 @@ public static class Utils
     }
 
     
-    public const string WorldPath = "Game/SubViewportContainer/SubViewport/world";
+    public const string WorldPath = "Game/Control/SubViewportContainer/SubViewport/world";
 }

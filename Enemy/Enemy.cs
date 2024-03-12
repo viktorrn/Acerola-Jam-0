@@ -49,6 +49,9 @@ public partial class Enemy : CharacterBody2D
 
 	private Node2D Handler;
 
+
+	private PackedScene Blood = GD.Load<PackedScene>("res://Effects/AlienBlood.tscn");
+
 	private bool AlertTriggerd = false;
 		
 	override public void _Ready()
@@ -70,9 +73,10 @@ public partial class Enemy : CharacterBody2D
 		health.OnHit += ApplyDamage;
 		health.OnDied += Kill;
 
+
         if (GetNodeOrNull("Shell") is Health shell)	
         {
-            shell.OnHit += ApplyDamage;
+            shell.OnHit += ApplyShellDamage;
 
         }
 
@@ -278,9 +282,26 @@ public override void _Draw()
 		TakeDamage = true;
 		Velocity = forceDirection*force*(1-(float)Handler.Get("KnockBackResistance"));
 		
+		float angle = forceDirection.Angle();
+
+		GpuParticles2D blood = Blood.Instantiate() as GpuParticles2D;
+		blood.Position = GlobalPosition;
+		blood.OneShot = true;
+		blood.Rotation = angle;
+		GetTree().Root.GetNode(Utils.WorldPath).AddChild(blood);
+
 		Target = Player;
 		AlertTriggerd = true;
 	
+	}
+
+	public void ApplyShellDamage(Vector2 forceDirection, float force)
+	{
+		TakeDamage = true;
+		Velocity = forceDirection*force*(1-(float)Handler.Get("KnockBackResistance"))*0.5f;
+
+		Target = Player;
+		AlertTriggerd = true;
 	}
 
 	public void Alerted()

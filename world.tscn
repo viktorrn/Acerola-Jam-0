@@ -1,11 +1,9 @@
-[gd_scene load_steps=20 format=3 uid="uid://3lgeu5pudirm"]
+[gd_scene load_steps=18 format=3 uid="uid://3lgeu5pudirm"]
 
 [ext_resource type="Script" path="res://PlayerCamera.cs" id="1_8cdkf"]
 [ext_resource type="Script" path="res://world.cs" id="1_bbimt"]
 [ext_resource type="PackedScene" uid="uid://bbon3jshxdqho" path="res://Player.tscn" id="1_s3a63"]
 [ext_resource type="TileSet" uid="uid://tppla7phxvo2" path="res://Props/tileset.tres" id="3_5ib0w"]
-[ext_resource type="PackedScene" uid="uid://5wlnfssbbnow" path="res://Items/Sniper/Sniper.tscn" id="4_pclv0"]
-[ext_resource type="PackedScene" uid="uid://dhohj5yxgukyp" path="res://Items/Shotgun/Shotgun.tscn" id="6_6yyug"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="7_5samy"]
 [ext_resource type="Script" path="res://CustomCursor.cs" id="7_dtrq0"]
 [ext_resource type="PackedScene" uid="uid://cdvra2g8uo2gu" path="res://Enemy/SimpleNest.tscn" id="9_gmy4w"]
@@ -13,7 +11,6 @@
 [ext_resource type="PackedScene" uid="uid://hf6inbqe6m1g" path="res://Items/NestBomb/NestBombLocation.tscn" id="11_fio2l"]
 [ext_resource type="PackedScene" uid="uid://bi0xcicu26hhu" path="res://Enemy/Charger/Charger.tscn" id="13_cr6sb"]
 [ext_resource type="PackedScene" uid="uid://68oaomu257q7" path="res://Props/DestructWall.tscn" id="13_y7sqk"]
-[ext_resource type="PackedScene" uid="uid://bfgmvs468fqi" path="res://Items/Revolver/Revolver.tscn" id="14_14frk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ckjbv"]
 
@@ -22,8 +19,8 @@ sky_material = SubResource("ProceduralSkyMaterial_ckjbv")
 
 [sub_resource type="Environment" id="Environment_hb6b1"]
 background_mode = 3
-background_energy_multiplier = 0.5
 sky = SubResource("Sky_2tynj")
+ambient_light_source = 1
 glow_enabled = true
 glow_levels/1 = 1.0
 glow_levels/2 = 1.0
@@ -35,14 +32,17 @@ glow_mix = 0.02
 glow_bloom = 0.03
 glow_blend_mode = 1
 
-[sub_resource type="NavigationPolygon" id="NavigationPolygon_4s2w1"]
-vertices = PackedVector2Array(204.985, 177.017, 345.986, 171.029, 339.983, 205.028, 309.981, 225.026, -90.033, 399.993, -166.033, 398.986, -144.023, 273.988, 17.9736, 320.001, 577.057, -691.952, 830.067, -814.932, 1147.07, -878.906, 1589.07, -897.869, 1546.03, -406.873, 525.033, -394.957, 529.045, -543.956, 13.9663, 409.001, 340.99, 119.028, 345.986, 170.029, 329.986, 171.027, 318.99, 122.026, 306.994, 69.0253, 202.99, 124.017, 184.994, 74.0152, 874.957, 526.072, 944.953, 565.078, 947.943, 686.078, 876.942, 702.072, 733.959, 493.06, 495.002, -26.9592, 584.013, -161.952, 802.013, -162.934, 844.997, 39.0696, 593.996, 54.0489, 45.9754, 299.004, -144.01, 121.988, -118.009, 109.99, 50.9828, 209.004, -79.0038, 45.9935, 83.9964, 44.0069, 123.994, 76.0102, 107.983, 207.009, 153.978, 272.013, 266.977, 282.022, 310.976, 292.026, 266.968, 394.022, 312.97, 364.026, 297.956, 537.025, 230.965, 420.019, 344.967, 395.028, 425.956, 529.035, 343.953, 571.028, 719.15, -1819.94, 1161.15, -1829.9, 1505.14, -1701.88, 1503.13, -1544.88, 1401.12, -1405.88, 1200.12, -1403.9, 536.125, -1514.96, 644.113, -1375.95, 803.11, -1336.93, 803.101, -1225.93, 1111.1, -1154.91, 922.085, -1031.92, 409.04, -483.966, 403.032, -387.967, 322.028, -335.973, 529.017, -206.956, 312.019, -228.974, 356.005, -65.9707, 304.012, -150.975, 744.975, 303.061, 699.975, 298.058, 586.984, 188.048, 879.995, 64.0725, 883.978, 266.073, 819.974, 314.068, 823.96, 487.068, 632.939, 736.052, 560.941, 717.046, 522.952, 580.043, 618.96, 481.051, 646.959, 497.053, 234.958, 504.019, 497.956, 537.041, 544.967, 400.045, 571.964, 440.047, 845.938, 749.07, 779.935, 783.064, 683.935, 789.056)
-polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(4, 5, 6, 7), PackedInt32Array(8, 9, 10, 11, 12, 13, 14), PackedInt32Array(7, 15, 4), PackedInt32Array(16, 17, 18, 19), PackedInt32Array(20, 16, 19, 21, 22), PackedInt32Array(23, 24, 25, 26, 27), PackedInt32Array(28, 29, 30, 31, 32), PackedInt32Array(33, 7, 6, 34, 35, 36), PackedInt32Array(36, 35, 37, 38, 39, 40), PackedInt32Array(40, 39, 22, 21, 0, 41), PackedInt32Array(42, 41, 0, 3), PackedInt32Array(42, 3, 43, 44), PackedInt32Array(44, 43, 45), PackedInt32Array(46, 47, 44, 45, 48, 49, 50), PackedInt32Array(51, 52, 53, 54, 55, 56, 57), PackedInt32Array(58, 57, 56, 59), PackedInt32Array(60, 59, 56, 61, 62), PackedInt32Array(62, 61, 10, 9), PackedInt32Array(63, 14, 13, 64), PackedInt32Array(65, 64, 13, 66, 67), PackedInt32Array(28, 68, 69, 67, 66, 29), PackedInt32Array(70, 71, 72, 32, 31, 73, 74), PackedInt32Array(70, 74, 75), PackedInt32Array(27, 70, 75, 76), PackedInt32Array(77, 78, 79, 80, 81), PackedInt32Array(46, 82, 47), PackedInt32Array(83, 49, 48, 84, 85), PackedInt32Array(83, 85, 80, 79), PackedInt32Array(86, 87, 88, 77, 81, 27, 26), PackedInt32Array(23, 27, 76)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(-166.033, 398.986, -90.033, 399.993, 13.9663, 409.001, 17.9736, 320.001, 45.9754, 299.004, 50.9828, 209.004, 107.983, 207.009, 153.978, 272.013, 266.977, 282.022, 266.968, 394.022, 230.965, 420.019, 234.958, 504.019, 297.956, 537.025, 343.953, 571.028, 425.956, 529.035, 497.956, 537.041, 522.952, 580.043, 560.941, 717.046, 632.939, 736.052, 683.935, 789.056, 779.935, 783.064, 845.938, 749.07, 876.942, 702.072, 947.943, 686.078, 944.953, 565.078, 874.957, 526.072, 823.96, 487.068, 819.974, 314.068, 883.978, 266.073, 879.995, 64.0725, 844.997, 39.0696, 802.013, -162.934, 584.013, -161.952, 529.017, -206.956, 525.033, -394.957, 1546.03, -406.873, 1589.07, -897.869, 1147.07, -878.906, 1111.1, -1154.91, 1200.12, -1403.9, 1401.12, -1405.88, 1503.13, -1544.88, 1505.14, -1701.88, 1161.15, -1829.9, 719.15, -1819.94, 536.125, -1514.96, 644.113, -1375.95, 803.11, -1336.93, 803.101, -1225.93, 922.085, -1031.92, 830.067, -814.932, 577.057, -691.952, 529.045, -543.956, 409.04, -483.966, 403.032, -387.967, 322.028, -335.973, 312.019, -228.974, 304.012, -150.975, 356.005, -65.9707, 495.002, -26.9592, 593.996, 54.0489, 586.984, 188.048, 699.975, 298.058, 744.975, 303.061, 733.959, 493.06, 646.959, 497.053, 618.96, 481.051, 571.964, 440.047, 544.967, 400.045, 344.967, 395.028, 312.97, 364.026, 310.976, 292.026, 309.981, 225.026, 339.983, 205.028, 345.986, 171.029, 204.985, 177.017, 202.99, 124.017, 318.99, 122.026, 329.986, 171.027, 345.986, 170.029, 340.99, 119.028, 306.994, 69.0253, 184.994, 74.0152, 123.994, 76.0102, 83.9964, 44.0069, -79.0038, 45.9935, -118.009, 109.99, -144.01, 121.988, -144.023, 273.988)])
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_o8rj4"]
 atlas = ExtResource("7_5samy")
 region = Rect2(85, 68, 7, 7)
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_4s2w1"]
+vertices = PackedVector2Array(345.986, 170.029, 329.986, 171.027, 334.988, 147.028, 340.99, 119.028, 327.99, 125.027, 214.986, 171.018, 345.986, 171.029, 339.983, 205.028, 309.981, 225.026, 306.994, 69.0253, 211.989, 129.017, 184.994, 74.0152, -90.033, 399.993, -166.033, 398.986, -144.023, 273.988, 17.9736, 320.001, 13.9663, 409.001, 874.957, 526.072, 944.953, 565.078, 947.943, 686.078, 876.942, 702.072, 739.961, 479.061, 699.975, 298.058, 599.985, 187.049, 589.999, 18.0486, 584.013, -161.952, 802.013, -162.934, 844.997, 39.0696, 744.975, 303.061, 646.959, 497.053, 628.938, 749.052, 557.939, 745.046, 531.953, 576.044, 618.96, 481.051, 266.968, 394.022, 344.967, 395.028, 544.967, 400.045, 425.956, 529.035, 343.953, 571.028, 300.957, 522.025, 244.966, 414.02, 45.9754, 299.004, -144.01, 121.988, -118.009, 109.99, 50.9828, 209.004, -79.0038, 45.9935, 83.9964, 44.0069, 123.994, 76.0102, 107.983, 207.009, 203.988, 147.017, 153.978, 272.013, 266.977, 282.022, 310.976, 292.026, 312.97, 364.026, 1739.08, -943.857, 2086.07, -815.828, 2067.04, -522.83, 1546.03, -406.873, 1589.07, -897.869, 577.057, -691.952, 830.067, -814.932, 1147.07, -878.906, 525.033, -394.957, 529.045, -543.956, 719.15, -1819.94, 1161.15, -1829.9, 1505.14, -1701.88, 1503.13, -1544.88, 1401.12, -1405.88, 1200.12, -1403.9, 536.125, -1514.96, 644.113, -1375.95, 803.11, -1336.93, 803.101, -1225.93, 1111.1, -1154.91, 922.085, -1031.92, 409.04, -483.966, 403.032, -387.967, 322.028, -335.973, 529.017, -206.956, 312.019, -228.974, 495.002, -26.9592, 356.005, -65.9707, 304.012, -150.975, 879.995, 64.0725, 883.978, 266.073, 815.975, 307.067, 823.96, 487.068, 249.959, 495.021, 497.956, 537.041, 571.964, 440.047, 845.938, 749.07, 779.935, 783.064, 683.935, 789.056)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(3, 2, 4), PackedInt32Array(5, 6, 7, 8), PackedInt32Array(9, 3, 4, 10, 11), PackedInt32Array(12, 13, 14, 15), PackedInt32Array(15, 16, 12), PackedInt32Array(17, 18, 19, 20, 21), PackedInt32Array(22, 23, 24, 25, 26, 27, 28), PackedInt32Array(29, 30, 31, 32, 33), PackedInt32Array(34, 35, 36, 37, 38, 39, 40), PackedInt32Array(41, 15, 14, 42, 43, 44), PackedInt32Array(44, 43, 45, 46, 47, 48), PackedInt32Array(48, 47, 11, 10, 49), PackedInt32Array(48, 49, 5, 50), PackedInt32Array(51, 50, 5, 8), PackedInt32Array(51, 8, 52, 34), PackedInt32Array(34, 52, 53), PackedInt32Array(34, 53, 35), PackedInt32Array(54, 55, 56, 57, 58), PackedInt32Array(59, 60, 61, 58, 57, 62, 63), PackedInt32Array(64, 65, 66, 67, 68, 69, 70), PackedInt32Array(71, 70, 69, 72), PackedInt32Array(73, 72, 69, 74, 75), PackedInt32Array(75, 74, 61, 60), PackedInt32Array(76, 63, 62, 77), PackedInt32Array(78, 77, 62, 79, 80), PackedInt32Array(81, 82, 83, 80, 79, 25), PackedInt32Array(24, 81, 25), PackedInt32Array(28, 27, 84, 85, 86), PackedInt32Array(21, 28, 86, 87), PackedInt32Array(39, 88, 40), PackedInt32Array(89, 37, 36, 90), PackedInt32Array(89, 90, 33, 32), PackedInt32Array(91, 92, 93, 30, 29, 21, 20), PackedInt32Array(17, 21, 87)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-166.033, 398.986, -90.033, 399.993, 13.9663, 409.001, 17.9736, 320.001, 45.9754, 299.004, 50.9828, 209.004, 107.983, 207.009, 153.978, 272.013, 266.977, 282.022, 266.968, 394.022, 244.966, 414.02, 249.959, 495.021, 300.957, 522.025, 343.953, 571.028, 425.956, 529.035, 497.956, 537.041, 531.953, 576.044, 557.939, 745.046, 628.938, 749.052, 683.935, 789.056, 779.935, 783.064, 845.938, 749.07, 876.942, 702.072, 947.943, 686.078, 944.953, 565.078, 874.957, 526.072, 823.96, 487.068, 815.975, 307.067, 883.978, 266.073, 879.995, 64.0725, 844.997, 39.0696, 802.013, -162.934, 584.013, -161.952, 529.017, -206.956, 525.033, -394.957, 1546.03, -406.873, 2067.04, -522.83, 2086.07, -815.828, 1739.08, -943.857, 1589.07, -897.869, 1147.07, -878.906, 1111.1, -1154.91, 1200.12, -1403.9, 1401.12, -1405.88, 1503.13, -1544.88, 1505.14, -1701.88, 1161.15, -1829.9, 719.15, -1819.94, 536.125, -1514.96, 644.113, -1375.95, 803.11, -1336.93, 803.101, -1225.93, 922.085, -1031.92, 830.067, -814.932, 577.057, -691.952, 529.045, -543.956, 409.04, -483.966, 403.032, -387.967, 322.028, -335.973, 312.019, -228.974, 304.012, -150.975, 356.005, -65.9707, 495.002, -26.9592, 589.999, 18.0486, 599.985, 187.049, 699.975, 298.058, 744.975, 303.061, 739.961, 479.061, 646.959, 497.053, 618.96, 481.051, 571.964, 440.047, 544.967, 400.045, 344.967, 395.028, 312.97, 364.026, 310.976, 292.026, 309.981, 225.026, 339.983, 205.028, 345.986, 171.029, 214.986, 171.018, 203.988, 147.017, 211.989, 129.017, 327.99, 125.027, 334.988, 147.028, 329.986, 171.027, 345.986, 170.029, 340.99, 119.028, 306.994, 69.0253, 184.994, 74.0152, 123.994, 76.0102, 83.9964, 44.0069, -79.0038, 45.9935, -118.009, 109.99, -144.01, 121.988, -144.023, 273.988)])
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bhx8u"]
+radius = 109.604
 
 [node name="world" type="Node2D"]
 script = ExtResource("1_bbimt")
@@ -51,9 +51,9 @@ metadata/_edit_lock_ = true
 
 [node name="ColorRect" type="ColorRect" parent="."]
 light_mask = 2
-offset_left = -793.0
+offset_left = -12.8326
 offset_top = -2323.0
-offset_right = 3100.0
+offset_right = 3880.17
 offset_bottom = 1729.0
 color = Color(0.137255, 0.129412, 0.121569, 1)
 
@@ -64,10 +64,12 @@ environment = SubResource("Environment_hb6b1")
 color = Color(0.752941, 0.827451, 1, 1)
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(101, 253)
+position = Vector2(716, 328)
 zoom = Vector2(3, 3)
 position_smoothing_speed = 10.0
 script = ExtResource("1_8cdkf")
+ShakeSpeed = 8.0
+ShakeDecay = 8.0
 
 [node name="Control" type="Control" parent="."]
 visible = false
@@ -99,6 +101,7 @@ render_target_update_mode = 0
 [node name="Base Layer" type="TileMap" parent="."]
 light_mask = 2
 z_as_relative = false
+position = Vector2(780.167, 0)
 rotation = -8.23889e-05
 tile_set = ExtResource("3_5ib0w")
 cell_quadrant_size = 32
@@ -120,83 +123,93 @@ layer_2/y_sort_origin = 0
 layer_2/z_index = 0
 layer_2/tile_data = PackedInt32Array()
 
-[node name="Player" parent="." instance=ExtResource("1_s3a63")]
-position = Vector2(-78, 349)
-
-[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
-rotation = -8.23889e-05
-navigation_polygon = SubResource("NavigationPolygon_4s2w1")
-metadata/_edit_lock_ = true
-
-[node name="NestBombLocation2" parent="." instance=ExtResource("11_fio2l")]
-position = Vector2(721, 633)
-scale = Vector2(0.998054, 0.998143)
-
-[node name="NestBombLocation3" parent="." instance=ExtResource("11_fio2l")]
-position = Vector2(977.094, -1561.1)
-scale = Vector2(0.998054, 0.998143)
-
-[node name="SimpleNest4" parent="." instance=ExtResource("9_gmy4w")]
-position = Vector2(632, 721)
-scale = Vector2(0.998054, 0.998143)
-MaxAmount = 3
-
-[node name="SimpleNest5" parent="." instance=ExtResource("9_gmy4w")]
-position = Vector2(883, 601)
-scale = Vector2(0.998054, 0.998143)
-MaxAmount = 3
-
-[node name="Sniper" parent="." instance=ExtResource("4_pclv0")]
-position = Vector2(-103, 282)
-
-[node name="Shotgun" parent="." instance=ExtResource("6_6yyug")]
-position = Vector2(-10, 328)
-
-[node name="NestBomb" parent="." instance=ExtResource("10_jp55k")]
-position = Vector2(721, 633)
-
 [node name="CustomCrosshair" type="Node2D" parent="."]
 top_level = true
 z_index = 100
+position = Vector2(780.167, 0)
 script = ExtResource("7_dtrq0")
 
 [node name="Sprite2D" type="Sprite2D" parent="CustomCrosshair"]
 texture = SubResource("AtlasTexture_o8rj4")
 
-[node name="NestBomb2" parent="." instance=ExtResource("10_jp55k")]
-position = Vector2(378, -288)
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+position = Vector2(778, 3)
+rotation = -8.23889e-05
+navigation_polygon = SubResource("NavigationPolygon_4s2w1")
 
-[node name="NestBomb3" parent="." instance=ExtResource("10_jp55k")]
-position = Vector2(-37, 200)
+[node name="NestBombLocation2" parent="." instance=ExtResource("11_fio2l")]
+position = Vector2(1501.17, 633)
+scale = Vector2(0.998054, 0.998143)
+
+[node name="NestBombLocation3" parent="." instance=ExtResource("11_fio2l")]
+position = Vector2(1757.26, -1561.1)
+scale = Vector2(0.998054, 0.998143)
 
 [node name="NestBombLocation" parent="." instance=ExtResource("11_fio2l")]
-position = Vector2(238, 224)
+position = Vector2(1018.17, 224)
 
-[node name="DestructWall" parent="." instance=ExtResource("13_y7sqk")]
-position = Vector2(731, 448)
-scale = Vector2(3.27969, 3.53428)
+[node name="Player" parent="." instance=ExtResource("1_s3a63")]
+y_sort_enabled = true
+position = Vector2(716, 259)
 
-[node name="Revolver" parent="." instance=ExtResource("14_14frk")]
-position = Vector2(-40, 299)
+[node name="SimpleNest4" parent="." instance=ExtResource("9_gmy4w")]
+position = Vector2(1412.17, 721)
+scale = Vector2(0.998054, 0.998143)
+Variant = 2
+ForceSpawnAmount = 2
 
-[node name="DestructWall2" parent="." instance=ExtResource("13_y7sqk")]
-position = Vector2(224, 320)
-scale = Vector2(3.32, 2.16)
+[node name="SimpleNest5" parent="." instance=ExtResource("9_gmy4w")]
+position = Vector2(1663.17, 601)
+scale = Vector2(0.998054, 0.998143)
+Variant = 3
+ForceSpawnAmount = 2
+
+[node name="SimpleNest3" parent="." instance=ExtResource("9_gmy4w")]
+position = Vector2(2198.17, -682)
+MaxAmount = 3
+
+[node name="SimpleNest2" parent="." instance=ExtResource("9_gmy4w")]
+position = Vector2(2135.17, -825)
+MaxAmount = 3
 
 [node name="SimpleNest" parent="." instance=ExtResource("9_gmy4w")]
-position = Vector2(268, 139)
-EnemyType = "Spitter"
+z_index = 1
+y_sort_enabled = true
+position = Vector2(1048.17, 139)
 SpawnTimer = 20.0
 MaxAmount = 1
 ForceSpawnAmount = 1
 
+[node name="NestBomb" parent="." instance=ExtResource("10_jp55k")]
+position = Vector2(1152, 482)
+
+[node name="NestBomb2" parent="." instance=ExtResource("10_jp55k")]
+position = Vector2(1158.17, -288)
+
+[node name="NestBomb3" parent="." instance=ExtResource("10_jp55k")]
+position = Vector2(800, 272)
+
+[node name="DestructWall" parent="." instance=ExtResource("13_y7sqk")]
+position = Vector2(1511.17, 448)
+scale = Vector2(3.27969, 3.53428)
+
+[node name="DestructWall2" parent="." instance=ExtResource("13_y7sqk")]
+position = Vector2(1004.17, 320)
+scale = Vector2(3.32, 2.16)
+
+[node name="Charger2" parent="." instance=ExtResource("13_cr6sb")]
+position = Vector2(1248, -353)
+
 [node name="Charger" parent="." instance=ExtResource("13_cr6sb")]
-position = Vector2(731, 67)
+position = Vector2(1511, 79)
 
-[node name="SimpleNest3" parent="." instance=ExtResource("9_gmy4w")]
-position = Vector2(1418, -682)
-MaxAmount = 3
+[node name="RespawnAnchor" type="Node2D" parent="."]
+position = Vector2(1274, -129)
 
-[node name="SimpleNest2" parent="." instance=ExtResource("9_gmy4w")]
-position = Vector2(1355, -825)
-MaxAmount = 3
+[node name="Area2D" type="Area2D" parent="RespawnAnchor"]
+collision_layer = 2048
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RespawnAnchor/Area2D"]
+position = Vector2(4, 0)
+shape = SubResource("CircleShape2D_bhx8u")

@@ -14,12 +14,12 @@ public partial class Explosion : Node2D
 		GetNode<GpuParticles2D>("Sparks").Emitting = true;
 		L1 = GetNode<PointLight2D>("L1");
 		L2 = GetNode<PointLight2D>("L2");
-		GD.Print(L1, " ", L2);
+	
 
         timer = new()
         {
             OneShot = true,
-            WaitTime = 1
+            WaitTime = 2
         };
 
 		timer.Timeout += () => {QueueFree();};
@@ -29,8 +29,8 @@ public partial class Explosion : Node2D
 	public override void _PhysicsProcess(double delta)
 	{
 
-		L1.Energy = Math.Clamp(4*(float)timer.TimeLeft,0,1);
-		L2.Energy = Math.Clamp(4*(float)timer.TimeLeft,0,1);
+		L1.Energy = Utils.Lerp(L1.Energy,0,4*(float)delta); 
+		L2.Energy = Utils.Lerp(L2.Energy,0,4*(float)delta);
 
 	}
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

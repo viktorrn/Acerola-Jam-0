@@ -70,11 +70,18 @@ public partial class Player : CharacterBody2D
 
 	private Area2D AlertArea;
 
-	private float TimePassed = 0.0f;
-	
+	private int TimePassed = 0;
+
+	private Vector2 PlayerInitialPosition = new Vector2(700,350);
+	private Vector2 PlayerSpawnLocation = new Vector2(700,350);
+
+	private Vector2 WeaponPosition = new Vector2(-5,2);
 
 	private int itemIndex = 0;
 	private Godot.Collections.Array<CharacterBody2D> inventory;
+	private PlayerCamera camera;
+
+	private GameEffects gameEffects;
 	public override void _Ready()
 	{
 		head = GetNode("Head") as Node2D;
@@ -89,19 +96,26 @@ public partial class Player : CharacterBody2D
 		interactionBox.BodyEntered += OnInteractionBodyEnterd;
 		interactionBox.BodyExited += OnInteractionBodyExited;
 
-	
-
+		PlayerSpawnLocation = PlayerInitialPosition;
+		camera = GetTree().Root.GetNode(Utils.WorldPath).GetNode<PlayerCamera>("Camera2D");
+		gameEffects = GetTree().Root.GetNode<GameEffects>("Game/Control/SubViewportContainer");
 
 		hurtBox.SetUpHealth(MaxHealth);
 		hurtBox.OnDied += Kill;
 		hurtBox.OnHit += ApplyDamage;
+		hurtBox.UsesHitStun = true;
 		
 		inventory = new() { null, null, null, null };
 		
 		healthBar = GetNode("Control").GetNode("Health") as ProgressBar;
 		healthBar.MaxValue = MaxHealth;
 		healthBar.Value = Health;
-		hurtBox.OnHealthChanged += (int health) => healthBar.Value = health;
+		
+		hurtBox.OnHealthChanged += (int health) => { 
+			healthBar.Value = health; 
+			camera.ShakeCamera(120);  
+			gameEffects.SetShakeAmount(2*(1 - health/MaxHealth));
+			};
 
 		Stamina = MaxStamina;
 		staminaBar = GetNode("Control").GetNode("Stamina") as ProgressBar;
@@ -133,19 +147,38 @@ public partial class Player : CharacterBody2D
 		AlertArea.AddChild(shape);
 
         AddChild(AlertArea);
-		
+		CallDeferred(nameof(Spawn));
 
+		GetNode<Area2D>("Respawn").AreaEntered += (Area2D area) => { 
+			PlayerSpawnLocation = area.GlobalPosition;
+			area.QueueFree(); 
+			};
+		
     }
 
 	public void Spawn()
 	{
+		GlobalPosition = PlayerSpawnLocation;
+		
+		Stamina = MaxStamina;
+		IsAlive = true;
+		hurtBox.Heal(MaxHealth);
+
 		BaseGun sniper = (BaseGun)Sniper.Instantiate();
 		BaseGun shotgun = (BaseGun)Shotgun.Instantiate();
 		BaseGun revolver = (BaseGun)Revolver.Instantiate();
 		
-		AddChild(sniper);
-		AddChild(shotgun);
-		AddChild(revolver);
+		GetTree().Root.GetNode(Utils.WorldPath).AddChild(sniper);
+		GetTree().Root.GetNode(Utils.WorldPath).AddChild(shotgun);
+		GetTree().Root.GetNode(Utils.WorldPath).AddChild(revolver);
+		
+		inventory[0] = shotgun;
+		inventory[1] = revolver;
+		inventory[2] = sniper;
+
+		inventory[0].Visible = false;
+		inventory[1].Visible = false;
+		inventory[2].Visible = false;
 	}
 
 	private void AlertEnemies()
@@ -168,11 +201,9 @@ public partial class Player : CharacterBody2D
 		DesiredLookVector = GetGlobalMousePosition() - head.GlobalPosition;
 		LookVector = LookVector.Lerp(DesiredLookVector, (float)delta*WeaponSnapSpeed);
 		
-		TimePassed += (float)delta;
+		
 
-		if(TimePassed > 100000.0f) {
-			TimePassed = 0.0f;
-		}
+		
 
 		UpdateAmmo();
 		int oldItemIndex = itemIndex;
@@ -253,30 +284,32 @@ public partial class Player : CharacterBody2D
 		}
 
 
+		GetNode<Control>("Prompt").GetNode<Label>("Label").Text = "";
 		if(inventory[itemIndex] == null || SwappingItem) return;
 
-		if(Input.IsActionJustPressed("Drop")){
-			// if Is Bomb then make it interactabke
-			if(itemIndex == 3 && (bool)inventory[3]?.Get("InsideArea"))	
-			{
-				interactionsInRange.Add(inventory[3]);
-				DropCurrentHeldWeapon(itemIndex);
-			} 
+		
 			
-
-			return;
-		}
-
-
 		if(Input.IsActionJustPressed("Reload")){
-			GD.Print("Reloading");
-			if((int)inventory[itemIndex].Get("MagAmount") > 0 && !(bool)inventory[itemIndex].Get("IsReloading"))
+			if(!(bool)inventory[itemIndex].Get("IsReloading"))
 			{
 				inventory[itemIndex]?.Call("Reload");
-			}
-			
+			} 
 			return;
 		}
+
+		if((bool)inventory[itemIndex].Get("IsReloading")){
+			GetNode<Control>("Prompt").GetNode<Label>("Label").Text = "Reloading...";
+		}
+
+		if(itemIndex == 3 && (bool)inventory[3]?.Get("InsideArea"))	
+		{
+			GetNode<Control>("Prompt").GetNode<Label>("Label").Text = "Place [X]";
+			if(Input.IsActionJustPressed("Drop")){
+				interactionsInRange.Add(inventory[3]);
+				DropCurrentHeldWeapon(itemIndex);
+				return;
+			}
+		} 
 		
 		if(Input.IsActionPressed("Shift")) return;
 		
@@ -311,7 +344,7 @@ public partial class Player : CharacterBody2D
 		MagLabel.Visible = true;
 		int ammo = (int)inventory[itemIndex].Get("CurrentAmmo");
 
-		MagLabel.Text = Math.Clamp((int)inventory[itemIndex].Get("MagAmount") - 1,0,100).ToString() + " | " + ammo.ToString();
+		MagLabel.Text = ammo.ToString();
 	}
 	private void DropCurrentHeldWeapon(int index){
 		if(inventory[index] is null) return;
@@ -365,6 +398,7 @@ public partial class Player : CharacterBody2D
 
 		velocity.Normalized();
 		Velocity = Velocity.Lerp(velocity, (float)deltaTime * Acceleration);
+		TimePassed = Velocity.Length() > 90.0f ? TimePassed + 1 : 0;
 		MoveAndSlide();
 		//var collisionData = MoveAndCollide(Velocity);
 	}
@@ -424,12 +458,16 @@ public partial class Player : CharacterBody2D
 		double angle = Math.Atan2(LookVector.Y,LookVector.X);
 		hand.Scale = new Vector2(1,LookVector.X < 0 ? -1 : 1);
 		hand.Rotation = (float)angle;
-	
+
 		if(inventory[itemIndex] == null) return;
+
+		float timeX = (float)Math.Sin(TimePassed*0.2);
+		float timeY = (float)Math.Sin(TimePassed*0.2);
 		
-		Vector2 WeaponPosition = Input.IsActionPressed("RMB") && !Input.IsActionPressed("Shift") ? Vector2.Zero : new(-2,5);
+		WeaponPosition = new Vector2(-2 + timeX*1.2f, 5 + timeY*0.8f);
+		WeaponPosition =  Input.IsActionPressed("Shift") ? new Vector2(-4 + timeX*3, 8 + timeY) : WeaponPosition;
+		WeaponPosition = Input.IsActionPressed("RMB") && !Input.IsActionPressed("Shift") ? Vector2.Zero : WeaponPosition;
 		
-		WeaponPosition = (Input.IsActionPressed("Shift") && Stamina > 0.1f) ? new Vector2(-8+(float)Math.Sin(TimePassed*0.1)*3, 8) : WeaponPosition;
 		
 		Node2D Weapon = hand.GetNode(inventory[itemIndex].Get("WeaponName").ToString()) as Node2D;
 		Weapon.Position =  Weapon.Position.Lerp(WeaponPosition, 0.5f);
@@ -437,20 +475,22 @@ public partial class Player : CharacterBody2D
 	}
 
 	public void Kill(){
-		for(int i = 0; i < 4; i++)
-		{
-			DropCurrentHeldWeapon(i);
-
-		}
+		
 		if(!IsAlive) return;	
 		IsAlive = false;
 		
+		inventory[0]?.QueueFree();
+		inventory[0] = null;
+		inventory[1]?.QueueFree();
+		inventory[1] = null;
+		inventory[2]?.QueueFree();
+		inventory[2] = null;
+		DropCurrentHeldWeapon(3);
+		
+
 		GetTree().CreateTimer(5.0f).Timeout += () =>{
-			GlobalPosition = new Vector2(-85,310);
 			EmitSignal("OnPlayerDied");
-			Stamina = MaxStamina;
-			IsAlive = true;
-			hurtBox.Heal(MaxHealth);
+			Spawn();
 		};
 	}
 

@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://dcw1xnf31fgd0"]
+
+[ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="1_4qa2o"]
+
+[sub_resource type="Gradient" id="Gradient_6jtut"]
+offsets = PackedFloat32Array(0.246032, 0.373016, 0.640873, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.878969, 0.462924, 0.179258, 1, 0.87451, 0.443137, 0.14902, 1, 0.980392, 0.980392, 0.980392, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_qunf4"]
+gradient = SubResource("Gradient_6jtut")
+
+[sub_resource type="Curve" id="Curve_daerk"]
+max_value = 3.0
+_data = [Vector2(0, 0.0526316), 0.0, 0.0, 0, 0, Vector2(0.0666667, 0), 0.0, 0.0, 0, 0, Vector2(0.257713, 1.67368), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_kuyl5"]
+curve = SubResource("Curve_daerk")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_qa7hc"]
+particle_flag_disable_z = true
+spread = 5.0
+flatness = 1.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 120.0
+initial_velocity_max = 200.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+damping_min = 120.0
+damping_max = 160.0
+scale_min = 0.5
+scale_max = 1.2
+scale_curve = SubResource("CurveTexture_kuyl5")
+color_ramp = SubResource("GradientTexture1D_qunf4")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ap6i"]
+atlas = ExtResource("1_4qa2o")
+region = Rect2(270, 15, 1, 1)
+
+[node name="BulletTrace" type="GPUParticles2D"]
+self_modulate = Color(1.6, 1.6, 1.6, 1)
+emitting = false
+amount = 26
+process_material = SubResource("ParticleProcessMaterial_qa7hc")
+texture = SubResource("AtlasTexture_3ap6i")
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0

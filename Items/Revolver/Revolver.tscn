@@ -51,6 +51,3 @@ offset_bottom = -17.0
 
 [node name="Handler" type="Node2D" parent="."]
 script = ExtResource("4_t43qx")
-BulletSpeed = 1200.0
-bulletOffset = 24
-MaxMagAmount = 40

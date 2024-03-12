@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://cdvra2g8uo2gu"]
+[gd_scene load_steps=9 format=3 uid="uid://cdvra2g8uo2gu"]
 
 [ext_resource type="Script" path="res://Enemy/SimpleNest.cs" id="1_a1ig1"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="1_bdhy5"]
+[ext_resource type="PackedScene" uid="uid://h8iq2lqk820b" path="res://Effects/Shadow.tscn" id="2_vx3ap"]
 [ext_resource type="Script" path="res://Health.cs" id="3_qjh1m"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pw1mh"]
@@ -25,10 +26,22 @@ collision_mask = 0
 script = ExtResource("1_a1ig1")
 MaxAmount = 2
 
+[node name="Shadow" parent="." instance=ExtResource("2_vx3ap")]
+position = Vector2(-4.00001, 27)
+scale = Vector2(6.62163, 3.0762)
+
+[node name="Shadow3" parent="." instance=ExtResource("2_vx3ap")]
+position = Vector2(27, 15)
+scale = Vector2(4, 4)
+
+[node name="Shadow2" parent="." instance=ExtResource("2_vx3ap")]
+position = Vector2(-36, 16)
+scale = Vector2(4, 4)
+
 [node name="Collision" type="CollisionPolygon2D" parent="."]
 position = Vector2(2.16441, 0)
 scale = Vector2(0.975543, 1)
-polygon = PackedVector2Array(-49.3719, 25, -52.4471, 7, -30.9206, 2, 24.4331, 1, 43.9095, 12, 39.8092, 24, -2.21867, 29)
+polygon = PackedVector2Array(-49.3719, 25, -52.4471, 7, -30.9206, -3, 29.5585, -3, 43.9095, 12, 39.8092, 24, -2.21867, 29)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-1, -13)

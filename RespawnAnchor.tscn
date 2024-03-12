@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://bfggfb7m8ff7m"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bhx8u"]
+radius = 109.604
+
+[node name="RespawnAnchor" type="Node2D"]
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2048
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_bhx8u")

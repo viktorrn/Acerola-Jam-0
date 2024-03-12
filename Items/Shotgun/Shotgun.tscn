@@ -55,6 +55,4 @@ grow_vertical = 1
 
 [node name="Handler" type="Node2D" parent="."]
 script = ExtResource("4_5ryco")
-BulletOffset = 36
-Damage = 2
-MaxMagAmount = 30
+Force = 90.0

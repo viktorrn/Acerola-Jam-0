@@ -1,24 +1,21 @@
-[gd_scene load_steps=6 format=3 uid="uid://b1sm2c54dy0y2"]
+[gd_scene load_steps=7 format=3 uid="uid://b1sm2c54dy0y2"]
 
 [ext_resource type="Script" path="res://Projectile.cs" id="1_34gn4"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_gixec"]
 [ext_resource type="Script" path="res://Items/SingelHitManager.cs" id="3_y1doh"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_0q286"]
-atlas = ExtResource("2_gixec")
-region = Rect2(25, 49, 3, 6)
+[ext_resource type="Texture2D" uid="uid://cb8o8ajre0dgy" path="res://LightSpot.tres" id="4_3wqxn"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ayr6i"]
 radius = 2.0
-height = 8.0
+height = 12.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0q286"]
+atlas = ExtResource("2_gixec")
+region = Rect2(25, 46, 3, 9)
 
 [node name="SniperBullet" type="CharacterBody2D"]
 collision_layer = 4
 script = ExtResource("1_34gn4")
-
-[node name="Sprite2D" type="Sprite2D" parent="."]
-rotation = 1.5708
-texture = SubResource("AtlasTexture_0q286")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 1.5708
@@ -26,3 +23,24 @@ shape = SubResource("CapsuleShape2D_ayr6i")
 
 [node name="HitManager" type="Node2D" parent="."]
 script = ExtResource("3_y1doh")
+
+[node name="PointLight2D2" type="PointLight2D" parent="."]
+position = Vector2(-3, 0)
+color = Color(0.784314, 0.909804, 1, 1)
+energy = 0.5
+texture = ExtResource("4_3wqxn")
+texture_scale = 0.1
+
+[node name="ShadowLight" type="PointLight2D" parent="."]
+position = Vector2(-3, 0)
+color = Color(0.784314, 0.909804, 1, 1)
+energy = 0.5
+range_item_cull_mask = 2
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 1)
+texture = ExtResource("4_3wqxn")
+texture_scale = 0.1
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+texture = SubResource("AtlasTexture_0q286")

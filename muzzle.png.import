@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dfkyc8anq3tq6"
-path="res://.godot/imported/viewbox.png-5a67386739c9689aa4626171c717ba54.ctex"
+uid="uid://b07r2p375q3q2"
+path="res://.godot/imported/muzzle.png-cbfc24788ef92165855cd5eb05056026.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://viewbox.png"
-dest_files=["res://.godot/imported/viewbox.png-5a67386739c9689aa4626171c717ba54.ctex"]
+source_file="res://muzzle.png"
+dest_files=["res://.godot/imported/muzzle.png-cbfc24788ef92165855cd5eb05056026.ctex"]
 
 [params]
 

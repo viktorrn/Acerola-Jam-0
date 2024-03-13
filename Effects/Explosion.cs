@@ -19,7 +19,7 @@ public partial class Explosion : Node2D
         timer = new()
         {
             OneShot = true,
-            WaitTime = 2
+            WaitTime = 4f
         };
 
 		timer.Timeout += () => {QueueFree();};

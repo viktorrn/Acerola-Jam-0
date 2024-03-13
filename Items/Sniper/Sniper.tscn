@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://5wlnfssbbnow"]
+[gd_scene load_steps=10 format=3 uid="uid://5wlnfssbbnow"]
 
 [ext_resource type="Script" path="res://Items/BaseGun.cs" id="1_ggmdp"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_at2ua"]
 [ext_resource type="PackedScene" uid="uid://c46gsafc54hsa" path="res://Items/Prompt.tscn" id="3_0tajx"]
 [ext_resource type="Script" path="res://Items/Sniper/SniperHandler.cs" id="4_nip30"]
+[ext_resource type="AudioStream" uid="uid://c4gut8bt4g480" path="res://Audio/mixkit-sci-fi-positive-notification-266.wav" id="5_ahs6e"]
+[ext_resource type="AudioStream" uid="uid://daemnnbitpwkx" path="res://Audio/RailGun.wav" id="5_ru7ek"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3jhie"]
 radius = 8.0
@@ -54,3 +56,13 @@ script = ExtResource("4_nip30")
 FireRate = 1.0
 ReloadTime = 12.0
 Force = 200.0
+
+[node name="ReloadDone" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_ahs6e")
+volume_db = -12.0
+mix_target = 1
+
+[node name="Fire" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_ru7ek")
+volume_db = -12.0
+mix_target = 1

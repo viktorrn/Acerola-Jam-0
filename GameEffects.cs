@@ -10,7 +10,7 @@ public partial class GameEffects : SubViewportContainer
 
 	[Export] public float ShakeStrength = 1f;
 	[Export] public float ShakeSpeed = 8f;
-	[Export] public float ShakeDecay = 0.1f;
+	[Export] public float ShakeDecay = 0.9f;
 
 	private FastNoiseLite noise = new();
 	private float Noise_i = 0;
@@ -21,7 +21,6 @@ public partial class GameEffects : SubViewportContainer
     {
 
 		EffectShaderMaterial = Material as ShaderMaterial;
-		GD.Print(EffectShaderMaterial);
 		CallDeferred("SetAmount",0.5f);
 		
     }
@@ -44,8 +43,9 @@ public partial class GameEffects : SubViewportContainer
 		DesiredAmount = amount;
 	}
 
-	public void SetShakeAmount(float amount){
+	public void SetShakeAmount(float amount, float decay){
 		Shake = amount;
+		ShakeDecay = decay;
 	}
 
 

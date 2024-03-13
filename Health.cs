@@ -5,7 +5,7 @@ public partial class Health : Area2D
 {
 	
 	private int MaxHealth = 20;
-	private int CurrentHealth = 20;
+	public int CurrentHealth = 20;
 
 	public bool UsesHitStun = false;
 	private bool HitStun = false;

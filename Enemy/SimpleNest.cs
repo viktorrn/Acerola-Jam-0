@@ -35,6 +35,7 @@ public partial class SimpleNest : StaticBody2D
 		timer.Timeout += () => { CheckToSpawn(); timer.Start(); };
 		AddToGroup("DestructionTerrain");
 		packedScene = GD.Load<PackedScene>("res://Enemy/" + EnemyType + "/" + EnemyType + ".tscn");
+		GetTree().Root.GetNode<GameManager>("Game").AddNest();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -78,6 +79,7 @@ public partial class SimpleNest : StaticBody2D
 	public void DestoryNest(){
 		timer.Stop();
 		GetNode<Label>("Label").Visible = true;
+		GetTree().Root.GetNode<GameManager>("Game").RemoveNest();
 
 	}
 }

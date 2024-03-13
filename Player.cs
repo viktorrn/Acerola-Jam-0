@@ -82,6 +82,14 @@ public partial class Player : CharacterBody2D
 	private PlayerCamera camera;
 
 	private GameEffects gameEffects;
+
+	private AudioStreamPlayer DeathSound;
+
+	private AudioStream Death = GD.Load<AudioStream>("res://Audio/Death.wav");
+	//private AudioStream Hit = GD.Load<AudioStream>("res://Audio/Hit.wav");
+
+	//private AudioStream Step = GD.Load<AudioStream>("res://Audio/Step.wav");
+
 	public override void _Ready()
 	{
 		head = GetNode("Head") as Node2D;
@@ -111,10 +119,15 @@ public partial class Player : CharacterBody2D
 		healthBar.MaxValue = MaxHealth;
 		healthBar.Value = Health;
 		
-		hurtBox.OnHealthChanged += (int health) => { 
+		DeathSound = GetNode<AudioStreamPlayer>("Death");
+
+		hurtBox.OnHealthChanged += (int hp) => { 
+			int health = hurtBox.CurrentHealth;
 			healthBar.Value = health; 
 			camera.ShakeCamera(120);  
-			gameEffects.SetShakeAmount(2*(1 - health/MaxHealth));
+			float decay = health <= 0 ? 0.9f : 2.0f*health/MaxHealth;
+			gameEffects.SetShakeAmount(4*(1 - health/MaxHealth),decay);
+			GetTree().Root.GetNode<GameManager>("Game")?.Call("OnPlayerTakeDamage", health <= 0);
 			};
 
 		Stamina = MaxStamina;
@@ -318,9 +331,13 @@ public partial class Player : CharacterBody2D
 			{
 				Node2D weapon = hand.GetNode(inventory[itemIndex].Get("WeaponName").ToString()) as Node2D;
 				int result = (int)inventory[itemIndex]?.Call("FireBullet",weapon.GlobalPosition,LookVector);
+				if(itemIndex == 2)
+				{
+					inventory[itemIndex]?.Call("Reload");
+				}
 				if(result == 0)
 				{
-				GD.Print("Out of ammo");
+				inventory[itemIndex]?.Call("Reload");
 				return;
 				}
 
@@ -487,6 +504,8 @@ public partial class Player : CharacterBody2D
 		inventory[2] = null;
 		DropCurrentHeldWeapon(3);
 		
+		DeathSound.Seek(0);
+		DeathSound.Play();
 
 		GetTree().CreateTimer(5.0f).Timeout += () =>{
 			EmitSignal("OnPlayerDied");
@@ -538,6 +557,7 @@ public partial class Player : CharacterBody2D
 
 	public void ApplyDamage(Vector2 forceDirection, float force)
 	{
+
 		Velocity = forceDirection * force;
 	}
 

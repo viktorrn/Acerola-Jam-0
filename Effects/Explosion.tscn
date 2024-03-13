@@ -1,9 +1,10 @@
-[gd_scene load_steps=23 format=3 uid="uid://4dcyi2mtpiao"]
+[gd_scene load_steps=24 format=3 uid="uid://4dcyi2mtpiao"]
 
 [ext_resource type="Texture2D" uid="uid://b5yseyhotly7j" path="res://Explosion.png" id="1_66r7t"]
 [ext_resource type="Script" path="res://Effects/Explosion.cs" id="1_j2e0i"]
 [ext_resource type="PackedScene" uid="uid://bfhijp75ta2cb" path="res://Effects/Circle.tscn" id="2_g753d"]
 [ext_resource type="Texture2D" uid="uid://cb8o8ajre0dgy" path="res://LightSpot.tres" id="4_jfs4a"]
+[ext_resource type="AudioStream" uid="uid://cumi8m7myrqwq" path="res://Audio/Bomb.wav" id="5_up1ap"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_gnpkm"]
 particles_animation = true
@@ -153,3 +154,10 @@ shadow_enabled = true
 shadow_color = Color(0, 0, 0, 1)
 texture = ExtResource("4_jfs4a")
 texture_scale = 0.2
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_up1ap")
+volume_db = -8.0
+pitch_scale = 0.9
+autoplay = true
+mix_target = 1

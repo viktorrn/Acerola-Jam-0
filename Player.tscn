@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://bbon3jshxdqho"]
+[gd_scene load_steps=25 format=3 uid="uid://bbon3jshxdqho"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_su24c"]
 [ext_resource type="PackedScene" uid="uid://h8iq2lqk820b" path="res://Effects/Shadow.tscn" id="2_5dh7u"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cb8o8ajre0dgy" path="res://LightSpot.tres" id="3_g322o"]
 [ext_resource type="Script" path="res://Health.cs" id="3_nl3fk"]
 [ext_resource type="PackedScene" uid="uid://d17icjkl2k0fr" path="res://Effects/Dust.tscn" id="5_jgx67"]
+[ext_resource type="AudioStream" uid="uid://bm12o6aenoes1" path="res://Audio/Death.wav" id="7_pmxdy"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dbfla"]
 radius = 16.0
@@ -360,3 +361,8 @@ localize_numeral_system = false
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 16
+
+[node name="Death" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_pmxdy")
+volume_db = -16.0
+mix_target = 1

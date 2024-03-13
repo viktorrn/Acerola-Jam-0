@@ -1,10 +1,18 @@
-[gd_scene load_steps=10 format=3 uid="uid://bg487qxe5c12j"]
+[gd_scene load_steps=22 format=3 uid="uid://bg487qxe5c12j"]
 
 [ext_resource type="Shader" path="res://Game.gdshader" id="1_bqdgh"]
 [ext_resource type="Script" path="res://GameViewPort.cs" id="1_odyjd"]
+[ext_resource type="Script" path="res://GameManager.cs" id="1_w2avj"]
 [ext_resource type="PackedScene" uid="uid://3lgeu5pudirm" path="res://world.tscn" id="2_j3ped"]
 [ext_resource type="Script" path="res://GameEffects.cs" id="2_wl7w0"]
 [ext_resource type="Script" path="res://StartLabel.cs" id="5_didpr"]
+[ext_resource type="Texture2D" uid="uid://dq3v70i7ecow0" path="res://endScreen.png" id="6_1rt3u"]
+[ext_resource type="Script" path="res://GameTimer.cs" id="6_rcjpd"]
+[ext_resource type="AudioStream" uid="uid://bs87c6pq3ittr" path="res://Audio/1.mp3" id="7_rxnrv"]
+[ext_resource type="Script" path="res://EndScreen.cs" id="8_ndyr6"]
+[ext_resource type="AudioStream" uid="uid://dg5pqlepdvwx" path="res://Audio/wind1.wav" id="9_863s5"]
+[ext_resource type="Texture2D" uid="uid://bdftufitsfqbt" path="res://Logo.png" id="10_1v0mg"]
+[ext_resource type="Script" path="res://Logo.cs" id="11_kyy5n"]
 
 [sub_resource type="Gradient" id="Gradient_uc63x"]
 offsets = PackedFloat32Array(0.0859189, 0.565632, 1)
@@ -28,7 +36,25 @@ font_size = 24
 shadow_size = 4
 shadow_color = Color(0, 0, 0, 1)
 
+[sub_resource type="Gradient" id="Gradient_bxv81"]
+offsets = PackedFloat32Array(0.22673, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2kp2i"]
+gradient = SubResource("Gradient_bxv81")
+fill = 1
+fill_from = Vector2(0.350427, 0.820513)
+fill_to = Vector2(0.961538, 0.0384615)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0ahkl"]
+shader = ExtResource("1_bqdgh")
+shader_parameter/apply = true
+shader_parameter/amount = 1.0
+shader_parameter/offset_texture = SubResource("GradientTexture2D_2kp2i")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_kp3s5"]
+
 [node name="Game" type="Node2D"]
+script = ExtResource("1_w2avj")
 
 [node name="Control" type="Control" parent="."]
 custom_minimum_size = Vector2(1600, 900)
@@ -47,7 +73,7 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.576
 anchor_bottom = 1.667
-offset_right = -921.6
+offset_right = -926.328
 offset_bottom = -600.3
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -55,12 +81,13 @@ stretch_shrink = 2
 script = ExtResource("2_wl7w0")
 ShakeStrength = 2.0
 ShakeSpeed = 4.0
-ShakeDecay = 0.7
+ShakeDecay = 2.0
 
 [node name="SubViewport" type="SubViewport" parent="Control/SubViewportContainer"]
 disable_3d = true
 handle_input_locally = false
 canvas_item_default_texture_filter = 0
+audio_listener_enable_2d = true
 gui_disable_input = true
 size = Vector2i(1600, 900)
 size_2d_override_stretch = true
@@ -76,10 +103,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -121.5
-offset_top = -39.0
-offset_right = 121.5
-offset_bottom = 39.0
+offset_left = -180.5
+offset_top = -74.0
+offset_right = 181.5
+offset_bottom = 74.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
@@ -88,6 +115,89 @@ theme_override_font_sizes/font_size = 24
 text = "Walk With WASD, 
 Shoot with LMB, ADS with RMB,
 1,2,3,4 and Hotkeys
-Got it?"
+"
 label_settings = SubResource("LabelSettings_vcpp7")
 script = ExtResource("5_didpr")
+
+[node name="Timer" type="Label" parent="Control"]
+layout_mode = 1
+offset_left = 28.0
+offset_top = 13.0
+offset_right = 69.0
+offset_bottom = 39.0
+text = "15:00"
+script = ExtResource("6_rcjpd")
+
+[node name="EndScreen" type="Control" parent="Control"]
+material = SubResource("ShaderMaterial_0ahkl")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("8_ndyr6")
+ShakeStrength = 0.02
+ShakeSpeed = 20.0
+ShakeDecay = 0.0
+
+[node name="Image" type="Sprite2D" parent="Control/EndScreen"]
+material = SubResource("ShaderMaterial_kp3s5")
+use_parent_material = true
+position = Vector2(800, 449.004)
+scale = Vector2(4.005, 4.00885)
+texture = ExtResource("6_1rt3u")
+
+[node name="Logo" type="Sprite2D" parent="Control/EndScreen"]
+use_parent_material = true
+position = Vector2(963, 431)
+scale = Vector2(3.5, 3.5)
+texture = ExtResource("10_1v0mg")
+script = ExtResource("11_kyy5n")
+Shake = 1.0
+
+[node name="Restart" type="Label" parent="Control/EndScreen"]
+layout_mode = 2
+offset_left = 920.0
+offset_top = 812.0
+offset_right = 1084.0
+offset_bottom = 860.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+text = "Start [Space]"
+
+[node name="Box" type="VBoxContainer" parent="Control/EndScreen"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.363
+anchor_top = 0.636
+anchor_right = 0.801
+anchor_bottom = 0.908
+offset_left = -541.889
+offset_top = -264.4
+offset_right = -867.003
+offset_bottom = -366.2
+alignment = 1
+
+[node name="Nests" type="Label" parent="Control/EndScreen/Box"]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+
+[node name="Enemeis" type="Label" parent="Control/EndScreen/Box"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_rxnrv")
+volume_db = -18.0
+mix_target = 1
+max_polyphony = 3
+
+[node name="Ambiance" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_863s5")
+volume_db = -18.0
+autoplay = true
+mix_target = 1

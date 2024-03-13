@@ -25,6 +25,7 @@ public partial class BaseGun : CharacterBody2D
 
     private PlayerCamera Camera;
 
+    private AudioStreamPlayer audioPlayer;
      
 
     override public void _Ready()
@@ -32,6 +33,7 @@ public partial class BaseGun : CharacterBody2D
         prompt = GetNode("Prompt") as Control;
         Handler = GetNode("Handler") as Node2D;
         Camera = GetTree().Root.GetNode(Utils.WorldPath).GetNode<PlayerCamera>("Camera2D");
+        audioPlayer = GetNode<AudioStreamPlayer>("Fire");
         try{
 
             WeaponName = (string)Handler.Get("WeaponName");
@@ -52,6 +54,10 @@ public partial class BaseGun : CharacterBody2D
         if(CurrentAmmo <= 0){return 0;}
 
         Camera.ShakeCamera((float)Handler.Get("FireForce"));        
+        
+        audioPlayer.Seek(0);
+        audioPlayer.PitchScale = 1 + (float)GD.RandRange(-0.1,0.1);
+        audioPlayer.Play();
 
         CurrentAmmo--;
         CanFire = false;
@@ -79,6 +85,7 @@ public partial class BaseGun : CharacterBody2D
     {
         CurrentAmmo = (int)Handler.Get("MagSize");
         IsReloading = false;
+        GetNodeOrNull<AudioStreamPlayer>("ReloadDone")?.Play();
     }   
 
     public void ShowPrompt()

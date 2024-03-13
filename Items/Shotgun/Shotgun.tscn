@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://dhohj5yxgukyp"]
+[gd_scene load_steps=10 format=3 uid="uid://dhohj5yxgukyp"]
 
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="1_hwrvg"]
 [ext_resource type="Script" path="res://Items/BaseGun.cs" id="1_yjfgq"]
 [ext_resource type="PackedScene" uid="uid://c46gsafc54hsa" path="res://Items/Prompt.tscn" id="2_s287d"]
 [ext_resource type="Script" path="res://Items/Shotgun/ShotgunHandler.cs" id="4_5ryco"]
+[ext_resource type="AudioStream" uid="uid://ccf6isu4kh1vt" path="res://Audio/ShotGun Blast.wav" id="5_vjrlx"]
+[ext_resource type="AudioStream" uid="uid://c27ct0apamn57" path="res://Audio/ShotGun Pump.wav" id="6_oaa8y"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_54akk"]
 radius = 6.0
@@ -55,4 +57,17 @@ grow_vertical = 1
 
 [node name="Handler" type="Node2D" parent="."]
 script = ExtResource("4_5ryco")
-Force = 90.0
+FireRate = 0.6
+ReloadTime = 1.8
+
+[node name="Fire" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_vjrlx")
+volume_db = -12.0
+mix_target = 1
+max_polyphony = 3
+
+[node name="Pump" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_oaa8y")
+volume_db = -12.0
+mix_target = 1
+max_polyphony = 2

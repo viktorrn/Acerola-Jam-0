@@ -8,9 +8,8 @@
 atlas = ExtResource("2_jkfs3")
 region = Rect2(49, 55, 3, 4)
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ayr6i"]
-radius = 1.0
-height = 8.0
+[sub_resource type="CircleShape2D" id="CircleShape2D_646rh"]
+radius = 2.01556
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_old25"]
 emission_shape = 1
@@ -21,12 +20,12 @@ gravity = Vector3(0, 0, 0)
 orbit_velocity_min = 0.0
 orbit_velocity_max = 0.0
 
-[sub_resource type="Gradient" id="Gradient_s2mol"]
+[sub_resource type="Gradient" id="Gradient_s7e6w"]
 offsets = PackedFloat32Array(0)
 colors = PackedColorArray(1, 1, 1, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_f12l8"]
-gradient = SubResource("Gradient_s2mol")
+gradient = SubResource("Gradient_s7e6w")
 width = 2
 height = 2
 fill_from = Vector2(0, 0.0512821)
@@ -40,13 +39,12 @@ rotation = 1.5708
 texture = SubResource("AtlasTexture_0q286")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-rotation = 1.5708
-shape = SubResource("CapsuleShape2D_ayr6i")
+shape = SubResource("CircleShape2D_646rh")
 
 [node name="HitManager" type="Node2D" parent="."]
 script = ExtResource("3_chjau")
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]
-visible = false
 process_material = SubResource("ParticleProcessMaterial_old25")
 texture = SubResource("GradientTexture2D_f12l8")
+lifetime = 0.2

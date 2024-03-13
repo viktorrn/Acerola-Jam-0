@@ -1,9 +1,11 @@
 using Godot;
 using System;
+using System.Threading;
 
 
 public partial class Enemy : CharacterBody2D
 {
+
 	public const float Speed = 130.0f;
 	private float Stunned = 1.0f;
 	private Area2D hitBox;
@@ -51,6 +53,10 @@ public partial class Enemy : CharacterBody2D
 
 
 	private PackedScene Blood = GD.Load<PackedScene>("res://Effects/AlienBlood.tscn");
+	private AudioStreamPlayer2D audioPlayer;
+
+	private AudioStream bodyHit = GD.Load<AudioStream>("res://Audio/HitBody.wav");
+	private AudioStream shellHit = GD.Load<AudioStream>("res://Audio/HitShell.wav");
 
 	private bool AlertTriggerd = false;
 		
@@ -63,10 +69,21 @@ public partial class Enemy : CharacterBody2D
         navAgent = GetNode("NavAgent") as NavigationAgent2D;
 		spriteNode = GetNode("Sprite") as Node2D;
 		animPlayer = spriteNode.GetNode("AnimationPlayer") as AnimationPlayer;
-		
-		
 		Handler = GetNode("Handler") as Node2D;
 
+        audioPlayer = new AudioStreamPlayer2D
+        {
+            Name = "AudioPlayer",
+            Bus = "Master",
+            Position = Vector2.Zero,
+            MaxDistance = 400,
+			VolumeDb = 8
+
+        };
+        AddChild(audioPlayer);
+
+
+		
 		
 		Health health = GetNode("HurtBox") as Health;
 		health.SetUpHealth((int)Handler.Get("MaxHealth"));
@@ -77,7 +94,6 @@ public partial class Enemy : CharacterBody2D
         if (GetNodeOrNull("Shell") is Health shell)	
         {
             shell.OnHit += ApplyShellDamage;
-
         }
 
         LOS = GetNode("LineOfSight") as RayCast2D;
@@ -122,6 +138,11 @@ public partial class Enemy : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		
+		if(GlobalPosition.DistanceTo(Player.GlobalPosition) > 1000)
+		{
+			return;
+		}
+
 		if (AlertTriggerd)
 		{
 			AlertTriggerd = false;
@@ -292,6 +313,9 @@ public override void _Draw()
 
 		Target = Player;
 		AlertTriggerd = true;
+		audioPlayer.Stream = bodyHit;
+		audioPlayer.PitchScale = 1 + (float)GD.RandRange(-0.1,0.1);
+		audioPlayer.Play();
 	
 	}
 
@@ -302,6 +326,9 @@ public override void _Draw()
 
 		Target = Player;
 		AlertTriggerd = true;
+		audioPlayer.Stream = shellHit;
+		audioPlayer.PitchScale = 1 + (float)GD.RandRange(-0.1,0.1);
+		audioPlayer.Play();
 	}
 
 	public void Alerted()

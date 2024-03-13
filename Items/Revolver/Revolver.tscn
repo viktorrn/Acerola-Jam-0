@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://bfgmvs468fqi"]
+[gd_scene load_steps=9 format=3 uid="uid://bfgmvs468fqi"]
 
 [ext_resource type="Script" path="res://Items/BaseGun.cs" id="1_coeah"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_4sssa"]
 [ext_resource type="PackedScene" uid="uid://c46gsafc54hsa" path="res://Items/Prompt.tscn" id="3_2x6sx"]
 [ext_resource type="Script" path="res://Items/Revolver/RevolverHandler.cs" id="4_t43qx"]
+[ext_resource type="AudioStream" uid="uid://2dotl6o273kx" path="res://Audio/Pistol Blast.wav" id="5_vdp73"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3jhie"]
 radius = 6.0
@@ -51,3 +52,9 @@ offset_bottom = -17.0
 
 [node name="Handler" type="Node2D" parent="."]
 script = ExtResource("4_t43qx")
+
+[node name="Fire" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_vdp73")
+volume_db = -12.0
+pitch_scale = 0.9
+max_polyphony = 2

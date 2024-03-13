@@ -53,6 +53,9 @@ public partial class ShotgunHandler : Node2D
         flash.Rotation = (float)lookAngle;
         flash.Position = position + direction.Normalized()*BulletOffset;
         GetTree().Root.GetNode(Utils.WorldPath).CallDeferred("add_child",flash);
+
+        GetNode<AudioStreamPlayer>("../Pump").PitchScale = 1 + (float)GD.RandRange(-0.1,0.1);
+        GetNode<AudioStreamPlayer>("../Pump").Play();
 	}
 
 

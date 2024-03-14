@@ -273,7 +273,7 @@ public override void _Draw()
 	{
 		EmitSignal(nameof(OnDied));
 	
-		
+		GetTree().Root.GetNode<GameManager>("Game").EnemyKilled();
 		// Alter All Other WithIn Range
 		AlertTriggerd = true;
 		if(Alive)

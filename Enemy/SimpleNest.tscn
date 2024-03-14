@@ -48,10 +48,6 @@ position = Vector2(-1, -13)
 texture = SubResource("AtlasTexture_pw1mh")
 hframes = 4
 vframes = 2
-frame = 1
-
-[node name="SpawnLocation" type="Node2D" parent="."]
-position = Vector2(25, -18)
 
 [node name="SpawnTimer" type="Timer" parent="."]
 autostart = true
@@ -77,3 +73,6 @@ shape = SubResource("CapsuleShape2D_2pbpy")
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="."]
 occluder = SubResource("OccluderPolygon2D_v8sdj")
+
+[node name="SpawnLocation" type="Node2D" parent="."]
+position = Vector2(-18, 38)

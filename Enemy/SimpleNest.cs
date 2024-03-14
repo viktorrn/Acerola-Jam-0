@@ -26,10 +26,10 @@ public partial class SimpleNest : StaticBody2D
 	public override void _Ready()
 	{
 		ammo = MaxAmount * ammo;
-		SpawnLocation.Add(new Vector2(-25,35));
-		SpawnLocation.Add(new Vector2(25,-20));
-		SpawnLocation.Add(new Vector2(-2,-22));
-		SpawnLocation.Add(new Vector2(25,20));
+		SpawnLocation.Add(new Vector2(-18,45));
+		SpawnLocation.Add(new Vector2(25,-30));
+		SpawnLocation.Add(new Vector2(-2,-30));
+		SpawnLocation.Add(new Vector2(-25,-30));
       	GetNode<Sprite2D>("Sprite2D").Frame = Variant;
 		((Health)GetNode<Area2D>("HurtBox")).OnDied += DestoryNest;
 

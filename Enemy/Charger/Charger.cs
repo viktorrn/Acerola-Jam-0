@@ -16,10 +16,10 @@ public partial class Charger : Node2D
 	
 	[Export] public float AttackRange = 40;
 
-	[Export] public int AttackReach = 10;
-	[Export] public int LunghRange = 5;
+	[Export] public int AttackReach = 40;
+	[Export] public int LunghRange = 8;
 
-	[Export] public int Damage = 5;
+	[Export] public int Damage = 4;
 	[Export] public float Force = 60;
 	
 	[ExportCategory("Attack Timings")]
@@ -56,7 +56,7 @@ public partial class Charger : Node2D
 		this.target = target as Player;
 		InitialVector = target.GlobalPosition - GlobalPosition;
 		GetTree().CreateTimer(ForeSwing).Timeout += () => AttackActive(target);
-		GetTree().CreateTimer(ForeSwing/2).Timeout += () => {InitialVector = target.GlobalPosition - GlobalPosition;};
+		//GetTree().CreateTimer(ForeSwing).Timeout += () => {InitialVector = target.GlobalPosition - GlobalPosition;};
 		GetTree().CreateTimer(ForeSwing+ActiveFrames).Timeout += () => AttackComplete();
 		GetTree().CreateTimer(ForeSwing+ActiveFrames+NLagg).Timeout += () => GetParent()?.Call("AttackComplete");
 		GetTree().CreateTimer(ForeSwing+ActiveFrames+NLagg+AttackOnCooldown).Timeout += () => GetParent()?.Call("AttackCooldownComplete");

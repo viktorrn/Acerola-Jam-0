@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://kptub4ptjiad"]
+
+[ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="1_fswmc"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_msycv"]
+atlas = ExtResource("1_fswmc")
+region = Rect2(7, 509, 84, 91)
+
+[node name="BigRock" type="StaticBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_msycv")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-41, 14, -33, 37, 7, 45, 37, 28, 29, 6, -24, 2)

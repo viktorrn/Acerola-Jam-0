@@ -156,6 +156,7 @@ Shake = 20.0
 ShakeSpeed = 6.0
 
 [node name="Restart2" type="Label" parent="Control/EndScreen"]
+layout_mode = 0
 offset_left = 28.0
 offset_top = 13.0
 offset_right = 163.0

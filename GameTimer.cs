@@ -29,7 +29,7 @@ public partial class GameTimer : Label
 
 	public void StartTimer()
 	{
-		timer.WaitTime = 60*10.0f;
+		timer.WaitTime = 10.0f;
 		isRunning = true;
 		timer.Start();
 	}

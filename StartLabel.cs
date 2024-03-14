@@ -39,6 +39,7 @@ public partial class StartLabel : Label
 
 	public void StartIntro()
 	{
+		Text = "";
 		index = 0;
 		timer.Start();
 	}

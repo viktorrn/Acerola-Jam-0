@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://bn3lhg1tibx4u"]
+
+[ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="1_m870h"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h7woi"]
+atlas = ExtResource("1_m870h")
+region = Rect2(96, 564, 45, 35)
+
+[node name="SmallRock" type="StaticBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_h7woi")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-20, 4, -12, 16, 10, 16, 20, 11, 19, 3, 3, 0, -10, 0)

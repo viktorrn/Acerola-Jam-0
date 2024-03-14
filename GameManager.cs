@@ -66,6 +66,11 @@ public partial class GameManager : Node2D
 		Nests++;
 	}
 
+	public void EnemyKilled()
+	{
+		EnemiesKilled++;
+	}
+
 	public void StartGame()
 	{
 		Tracks.Clear();

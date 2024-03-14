@@ -1,10 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://bi0xcicu26hhu"]
+[gd_scene load_steps=15 format=3 uid="uid://bi0xcicu26hhu"]
 
 [ext_resource type="Script" path="res://Enemy/Enemy.cs" id="1_b6prs"]
 [ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_bpemg"]
 [ext_resource type="Script" path="res://Health.cs" id="3_4djrv"]
-[ext_resource type="Script" path="res://Enemy/Biter/Biter.cs" id="4_y7m21"]
-[ext_resource type="Script" path="res://Enemy/Biter/BiteAttack.cs" id="5_2bwks"]
+[ext_resource type="Script" path="res://Enemy/Charger/Charger.cs" id="5_hqc7n"]
+[ext_resource type="Script" path="res://Enemy/Charger/ChargeAttack.cs" id="6_cdo0a"]
 [ext_resource type="PackedScene" uid="uid://h8iq2lqk820b" path="res://Effects/Shadow.tscn" id="6_w8i4d"]
 
 [sub_resource type="Animation" id="Animation_7o1vt"]
@@ -31,20 +31,22 @@ _data = {
 atlas = ExtResource("2_bpemg")
 region = Rect2(160, 124, 64, 37)
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s2wed"]
+height = 20.0
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_6jw62"]
+polygon = PackedVector2Array(0, -18, 22, -14, 24, 2, -6, -3, -12, -18)
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lmxu4"]
 radius = 5.0
 height = 40.0
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s2wed"]
-radius = 9.0
-height = 18.0
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_gmdpc"]
-radius = 8.06226
+radius = 11.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ttem2"]
 atlas = ExtResource("2_bpemg")
-region = Rect2(64, 66, 14, 14)
+region = Rect2(164, 101, 20, 21)
 
 [node name="Charger" type="CharacterBody2D"]
 collision_layer = 96
@@ -69,30 +71,33 @@ libraries = {
 position = Vector2(0, -8)
 texture = SubResource("AtlasTexture_nfuiu")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(3, 4)
-rotation = 1.5708
-shape = SubResource("CapsuleShape2D_lmxu4")
-
-[node name="HurtBox" type="Area2D" parent="."]
+[node name="HurtBox" type="Area2D" parent="Sprite"]
 collision_layer = 128
 collision_mask = 4
 input_pickable = false
 priority = 1
 script = ExtResource("3_4djrv")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
-position = Vector2(-15, -8)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/HurtBox"]
+position = Vector2(-16, -6)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_s2wed")
 
-[node name="Shell" type="Area2D" parent="."]
+[node name="Shell" type="Area2D" parent="Sprite"]
 collision_layer = 32
 collision_mask = 4
 script = ExtResource("3_4djrv")
 
-[node name="Shell" type="CollisionPolygon2D" parent="Shell"]
-polygon = PackedVector2Array(27, -11, 17, -18, -6, -21, -17, -19, -17, -19, -17, -18, -7, -15, -7, -1, 24, 3)
+[node name="Shell" type="CollisionPolygon2D" parent="Sprite/Shell"]
+polygon = PackedVector2Array(27, -11, 17, -18, -6, -23, -29, -23, -24, -13, -9, -13, -7, -1, 24, 3)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite"]
+occluder = SubResource("OccluderPolygon2D_6jw62")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(3, 4)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_lmxu4")
 
 [node name="Control" type="Control" parent="."]
 visible = false
@@ -117,19 +122,13 @@ path_desired_distance = 32.0
 target_desired_distance = 16.0
 
 [node name="Handler" type="Node2D" parent="."]
-script = ExtResource("4_y7m21")
-MaxHealth = 50
-AttackRange = 120.0
-AttackReach = 30
-LunghRange = 400
-Damage = 10
-Force = 200.0
+script = ExtResource("5_hqc7n")
 
 [node name="HitBox" type="Area2D" parent="Handler"]
 visible = false
 collision_layer = 16
 collision_mask = 0
-script = ExtResource("5_2bwks")
+script = ExtResource("6_cdo0a")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Handler/HitBox"]
 shape = SubResource("CircleShape2D_gmdpc")
@@ -137,6 +136,8 @@ debug_color = Color(0.921569, 0.247059, 0.352941, 0.666667)
 
 [node name="Sprite2D" type="Sprite2D" parent="Handler/HitBox"]
 z_index = 6
+position = Vector2(-2, -2)
+scale = Vector2(1.15, 1.11905)
 texture = SubResource("AtlasTexture_ttem2")
 
 [node name="LineOfSight" type="RayCast2D" parent="."]

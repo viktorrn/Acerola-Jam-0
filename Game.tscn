@@ -3,7 +3,6 @@
 [ext_resource type="Shader" path="res://Game.gdshader" id="1_bqdgh"]
 [ext_resource type="Script" path="res://GameViewPort.cs" id="1_odyjd"]
 [ext_resource type="Script" path="res://GameManager.cs" id="1_w2avj"]
-[ext_resource type="PackedScene" uid="uid://3lgeu5pudirm" path="res://world.tscn" id="2_j3ped"]
 [ext_resource type="Script" path="res://GameEffects.cs" id="2_wl7w0"]
 [ext_resource type="Script" path="res://StartLabel.cs" id="5_didpr"]
 [ext_resource type="Texture2D" uid="uid://dq3v70i7ecow0" path="res://endScreen.png" id="6_1rt3u"]
@@ -12,6 +11,7 @@
 [ext_resource type="Script" path="res://EndScreen.cs" id="8_ndyr6"]
 [ext_resource type="AudioStream" uid="uid://dg5pqlepdvwx" path="res://Audio/wind1.wav" id="9_863s5"]
 [ext_resource type="Texture2D" uid="uid://bdftufitsfqbt" path="res://Logo.png" id="10_1v0mg"]
+[ext_resource type="Script" path="res://Image.cs" id="10_m2mnd"]
 [ext_resource type="Script" path="res://Logo.cs" id="11_kyy5n"]
 
 [sub_resource type="Gradient" id="Gradient_uc63x"]
@@ -94,8 +94,6 @@ size_2d_override_stretch = true
 render_target_update_mode = 4
 script = ExtResource("1_odyjd")
 
-[node name="world" parent="Control/SubViewportContainer/SubViewport" instance=ExtResource("2_j3ped")]
-
 [node name="Label" type="Label" parent="Control"]
 layout_mode = 1
 anchors_preset = 8
@@ -112,9 +110,7 @@ grow_vertical = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 24
-text = "Walk With WASD, 
-Shoot with LMB, ADS with RMB,
-1,2,3,4 and Hotkeys
+text = "
 "
 label_settings = SubResource("LabelSettings_vcpp7")
 script = ExtResource("5_didpr")
@@ -144,9 +140,11 @@ ShakeDecay = 0.0
 [node name="Image" type="Sprite2D" parent="Control/EndScreen"]
 material = SubResource("ShaderMaterial_kp3s5")
 use_parent_material = true
-position = Vector2(800, 449.004)
-scale = Vector2(4.005, 4.00885)
+position = Vector2(809, 435)
+scale = Vector2(4.45, 4.51556)
 texture = ExtResource("6_1rt3u")
+script = ExtResource("10_m2mnd")
+Shake = 30.0
 
 [node name="Logo" type="Sprite2D" parent="Control/EndScreen"]
 use_parent_material = true
@@ -154,7 +152,19 @@ position = Vector2(963, 431)
 scale = Vector2(3.5, 3.5)
 texture = ExtResource("10_1v0mg")
 script = ExtResource("11_kyy5n")
-Shake = 1.0
+Shake = 20.0
+ShakeSpeed = 6.0
+
+[node name="Restart2" type="Label" parent="Control/EndScreen"]
+offset_left = 28.0
+offset_top = 13.0
+offset_right = 163.0
+offset_bottom = 69.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 16
+text = "By ViktorRN
+For Acerola Jam 0"
 
 [node name="Restart" type="Label" parent="Control/EndScreen"]
 layout_mode = 2
@@ -185,7 +195,7 @@ size_flags_horizontal = 0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 32
 
-[node name="Enemeis" type="Label" parent="Control/EndScreen/Box"]
+[node name="Enemies" type="Label" parent="Control/EndScreen/Box"]
 layout_mode = 2
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 32

@@ -53,6 +53,7 @@ public partial class Enemy : CharacterBody2D
 
 
 	private PackedScene Blood = GD.Load<PackedScene>("res://Effects/AlienBlood.tscn");
+	private PackedScene Spark = GD.Load<PackedScene>("res://Effects/Sparks.tscn"); 
 	private AudioStreamPlayer2D audioPlayer;
 
 	private AudioStream bodyHit = GD.Load<AudioStream>("res://Audio/HitBody.wav");
@@ -82,16 +83,13 @@ public partial class Enemy : CharacterBody2D
         };
         AddChild(audioPlayer);
 
-
-		
-		
-		Health health = GetNode("HurtBox") as Health;
+		Health health = spriteNode.GetNode("HurtBox") as Health;
 		health.SetUpHealth((int)Handler.Get("MaxHealth"));
 		health.OnHit += ApplyDamage;
 		health.OnDied += Kill;
 
 
-        if (GetNodeOrNull("Shell") is Health shell)	
+        if (spriteNode.GetNodeOrNull("Shell") is Health shell)	
         {
             shell.OnHit += ApplyShellDamage;
         }
@@ -273,30 +271,26 @@ public override void _Draw()
 
 	public void Kill()
 	{
-		Alive = false;
 		EmitSignal(nameof(OnDied));
-		CallDeferred(nameof(DisableCollision));
+	
 		
 		// Alter All Other WithIn Range
-		
+		AlertTriggerd = true;
+		if(Alive)
+		{
+			Handler.Call("OnDied",spriteNode.Scale,Velocity);
+
+		}
+		Alive = false;
+		QueueFree();
 
 
 		//navAgent.
 		// play death stuff
 	}
 
-	public void DisableCollision()
-	{
-		CollisionLayer = 0;
-		Area2D shell = GetNodeOrNull<Area2D>("Shell");
-		if(shell != null)
-		{
-			shell.CollisionLayer = 0;
-			shell.CollisionMask = 0;
-			shell.Monitorable = false;
-			shell.Monitoring = false;
-		}
-	}
+
+	
 
 	public void ApplyDamage(Vector2 forceDirection, float force)
 	{
@@ -307,7 +301,6 @@ public override void _Draw()
 
 		GpuParticles2D blood = Blood.Instantiate() as GpuParticles2D;
 		blood.Position = GlobalPosition;
-		blood.OneShot = true;
 		blood.Rotation = angle;
 		GetTree().Root.GetNode(Utils.WorldPath).AddChild(blood);
 
@@ -329,6 +322,13 @@ public override void _Draw()
 		audioPlayer.Stream = shellHit;
 		audioPlayer.PitchScale = 1 + (float)GD.RandRange(-0.1,0.1);
 		audioPlayer.Play();
+
+		float angle = forceDirection.Angle() + (float)Math.PI;
+
+		GpuParticles2D sparks = Spark.Instantiate() as GpuParticles2D;
+		sparks.Position = GlobalPosition;
+		sparks.Rotation = angle;
+		GetTree().Root.GetNode(Utils.WorldPath).AddChild(sparks);
 	}
 
 	public void Alerted()

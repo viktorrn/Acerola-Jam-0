@@ -1,0 +1,47 @@
+[gd_scene load_steps=8 format=3 uid="uid://xo4nliuq71jc"]
+
+[ext_resource type="Script" path="res://Dead.cs" id="1_1koq7"]
+[ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="1_n4jaq"]
+[ext_resource type="Script" path="res://Health.cs" id="2_otxyc"]
+[ext_resource type="PackedScene" uid="uid://h8iq2lqk820b" path="res://Effects/Shadow.tscn" id="3_iypb6"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_r0rh8"]
+radius = 6.0
+height = 20.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_68okq"]
+atlas = ExtResource("1_n4jaq")
+region = Rect2(167, 165, 51, 29)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1nyvd"]
+radius = 11.0
+height = 46.0
+
+[node name="DeadCharger" type="CharacterBody2D"]
+collision_layer = 0
+script = ExtResource("1_1koq7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+rotation = 1.5708
+scale = Vector2(0.84, 2.04847)
+shape = SubResource("CapsuleShape2D_r0rh8")
+
+[node name="Shadow" parent="." instance=ExtResource("3_iypb6")]
+position = Vector2(0, 8)
+scale = Vector2(4.25573, 1.37476)
+
+[node name="Dead" type="Sprite2D" parent="."]
+position = Vector2(0, -7)
+rotation = -0.261799
+texture = SubResource("AtlasTexture_68okq")
+
+[node name="Health" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("2_otxyc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Health"]
+position = Vector2(0, -5)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_1nyvd")

@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://8wefswcxcurl"]
+
+[ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="1_idaxh"]
+[ext_resource type="Script" path="res://NukeBomb.cs" id="1_jkc33"]
+[ext_resource type="Texture2D" uid="uid://cb8o8ajre0dgy" path="res://LightSpot.tres" id="2_avqp3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_783qh"]
+atlas = ExtResource("1_idaxh")
+region = Rect2(492, 480, 8, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4xj2h"]
+atlas = ExtResource("1_idaxh")
+region = Rect2(436, 480, 48, 32)
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_jkc33")
+
+[node name="Laser" type="Sprite2D" parent="."]
+self_modulate = Color(2, 2, 2, 1)
+position = Vector2(-1, -263)
+scale = Vector2(1, 21.9583)
+texture = SubResource("AtlasTexture_783qh")
+
+[node name="Circle" type="Sprite2D" parent="."]
+self_modulate = Color(2, 2, 2, 1)
+texture = SubResource("AtlasTexture_4xj2h")
+
+[node name="L1" type="PointLight2D" parent="."]
+scale = Vector2(0.191895, 0.191895)
+color = Color(0.996094, 0.398438, 0.398438, 1)
+energy = 2.0
+range_item_cull_mask = 3
+texture = ExtResource("2_avqp3")
+
+[node name="L2" type="PointLight2D" parent="."]
+scale = Vector2(0.192, 0.192)
+color = Color(0.996094, 0.398438, 0.398438, 1)
+energy = 2.0
+range_item_cull_mask = 2
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 1)
+texture = ExtResource("2_avqp3")

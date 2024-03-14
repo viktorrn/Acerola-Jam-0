@@ -1,0 +1,46 @@
+[gd_scene load_steps=8 format=3 uid="uid://b0ylauyomqsmi"]
+
+[ext_resource type="Script" path="res://Dead.cs" id="1_dqev2"]
+[ext_resource type="PackedScene" uid="uid://h8iq2lqk820b" path="res://Effects/Shadow.tscn" id="1_lu0ug"]
+[ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="2_sa84h"]
+[ext_resource type="Script" path="res://Health.cs" id="4_qnrcd"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xil2g"]
+radius = 3.0
+height = 20.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u5vya"]
+atlas = ExtResource("2_sa84h")
+region = Rect2(105, 164, 22, 17)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_uf3qx"]
+radius = 6.0
+height = 24.0
+
+[node name="DeadBiter" type="CharacterBody2D"]
+collision_layer = 0
+script = ExtResource("1_dqev2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 7)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_xil2g")
+
+[node name="Shadow" parent="." instance=ExtResource("1_lu0ug")]
+position = Vector2(0, 8)
+scale = Vector2(1.69573, 1.37476)
+
+[node name="Dead" type="Sprite2D" parent="."]
+position = Vector2(-1, 0)
+rotation = -0.394444
+texture = SubResource("AtlasTexture_u5vya")
+
+[node name="Health" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("4_qnrcd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Health"]
+position = Vector2(0, 2)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_uf3qx")

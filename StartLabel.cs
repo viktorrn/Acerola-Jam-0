@@ -17,18 +17,19 @@ public partial class StartLabel : Label
 	private int index = 0;
 	private List<float> times = new List<float>(
 			new float[] {
-				10.0f,
+				3.0f,
 				5.0f,
-				7.0f,
 				5.0f,
+				3.0f,
 			}
 		);
     public override void _Ready()
     {
-      index = 0;
+      
         timer = new Timer
         {
-            WaitTime = 8.0f
+            WaitTime = 3.0f
+			
         };
         timer.Timeout += () => {
 			proccedIntro();
@@ -38,6 +39,7 @@ public partial class StartLabel : Label
 
 	public void StartIntro()
 	{
+		index = 0;
 		timer.Start();
 	}
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -46,8 +48,7 @@ public partial class StartLabel : Label
         if(index >= strings.Count) 
 		{
 			Text = "";
-			GetNode<Label>("../Timer").CallDeferred("StartTimer");
-			
+			timer.Stop();
 			return;
 
 		}

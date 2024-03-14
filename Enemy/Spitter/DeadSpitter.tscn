@@ -1,0 +1,63 @@
+[gd_scene load_steps=11 format=3 uid="uid://hrsxha3046e6"]
+
+[ext_resource type="Script" path="res://Dead.cs" id="1_gro1r"]
+[ext_resource type="PackedScene" uid="uid://h8iq2lqk820b" path="res://Effects/Shadow.tscn" id="2_quw3i"]
+[ext_resource type="Texture2D" uid="uid://t6k3x6hbumyl" path="res://sp1.tres" id="3_32ose"]
+[ext_resource type="Script" path="res://Health.cs" id="4_icyve"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b2no3"]
+radius = 3.0
+height = 20.0
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ngoov"]
+load_path = "res://.godot/imported/SpriteSheet.png-040ebba16d640fb7aff3b4a27f6593e2.ctex"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1q2bq"]
+atlas = SubResource("CompressedTexture2D_ngoov")
+region = Rect2(0, 0, 1200, 608)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nieg7"]
+atlas = SubResource("AtlasTexture_1q2bq")
+region = Rect2(233, 169, 14, 12)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uhhun"]
+atlas = ExtResource("3_32ose")
+region = Rect2(250, 162, 13, 17)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_7ulpq"]
+radius = 6.0
+height = 24.0
+
+[node name="DeadBiter" type="CharacterBody2D"]
+position = Vector2(-3, -1)
+collision_layer = 0
+script = ExtResource("1_gro1r")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(2, 7)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_b2no3")
+
+[node name="Shadow" parent="." instance=ExtResource("2_quw3i")]
+position = Vector2(2, 8)
+scale = Vector2(1.69573, 1.37476)
+
+[node name="Dead" type="Sprite2D" parent="."]
+position = Vector2(-2, 2)
+rotation = -0.394444
+texture = SubResource("AtlasTexture_nieg7")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(8, 3)
+rotation = 1.0472
+texture = SubResource("AtlasTexture_uhhun")
+
+[node name="Health" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("4_icyve")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Health"]
+position = Vector2(3, 2)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_7ulpq")

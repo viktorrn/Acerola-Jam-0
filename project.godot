@@ -10,9 +10,10 @@ config_version=5
 
 [application]
 
-config/name="Acerola Jam 0"
+config/name="Blown To Bits"
 run/main_scene="res://Game.tscn"
 config/features=PackedStringArray("4.1", "C#", "GL Compatibility")
+boot_splash/image="res://StartLogo.png"
 config/icon="res://icon.svg"
 
 [debug]

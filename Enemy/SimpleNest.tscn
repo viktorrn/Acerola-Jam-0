@@ -7,7 +7,7 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pw1mh"]
 atlas = ExtResource("1_bdhy5")
-region = Rect2(576, 256, 512, 96)
+region = Rect2(576, 256, 512, 192)
 
 [sub_resource type="LabelSettings" id="LabelSettings_ynkb5"]
 font_size = 32
@@ -47,6 +47,7 @@ polygon = PackedVector2Array(-49.3719, 25, -52.4471, 7, -30.9206, -3, 29.5585, -
 position = Vector2(-1, -13)
 texture = SubResource("AtlasTexture_pw1mh")
 hframes = 4
+vframes = 2
 frame = 1
 
 [node name="SpawnLocation" type="Node2D" parent="."]

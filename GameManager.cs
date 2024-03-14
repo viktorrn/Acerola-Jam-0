@@ -15,6 +15,7 @@ public partial class GameManager : Node2D
 	private float musicPitch = 1.0f;
 
 	private bool FirstRun= true;
+	private bool fadeOutMusic = false;
 
 	private List<string> Tracks = new List<string>();
 
@@ -27,7 +28,6 @@ public partial class GameManager : Node2D
 		music.Finished += () => {
 			PlayNextTrack();
 		};
-		
 
 		ambiance = GetNode<AudioStreamPlayer>("Ambiance");
 		ambiance.Play();
@@ -42,6 +42,13 @@ public partial class GameManager : Node2D
 	{
 		float old = music.PitchScale;
 		music.PitchScale = Utils.Lerp(old,musicPitch,0.01f);
+		if(!fadeOutMusic)return;
+		music.VolumeDb = Utils.Lerp(music.VolumeDb,-80,0.001f);
+		if(music.VolumeDb <= -79.5f)
+		{
+			music.Stop();
+			fadeOutMusic = false;
+		}
 	}
 
 
@@ -49,6 +56,7 @@ public partial class GameManager : Node2D
 	{
 		if(Tracks.Count == 0) return;
 		music.Stream = GD.Load<AudioStream>(Tracks[0]);
+		music.VolumeDb = -18;
 		Tracks.RemoveAt(0);
 		music.Play();
 	}
@@ -66,6 +74,19 @@ public partial class GameManager : Node2D
 		Tracks.Add("res://Audio/3.mp3");
 		GetNode<StartLabel>("Control/Label").StartIntro();
 		GetNode<GameTimer>("Control/Timer").StartTimer();
+		Nests = 0;
+		NestsDestroyed = 0;
+		EnemiesKilled = 0;
+		fadeOutMusic = false;
+		GetNode<GameViewPort>("Control/SubViewportContainer/SubViewport").StartGame();
+	}
+
+	public void EndGame()
+	{
+		GetNode<EndScreen>("Control/EndScreen").ShowEndScreen();
+		GetNode<GameViewPort>("Control/SubViewportContainer/SubViewport").EndGame();
+		GetNode<GameTimer>("Control/Timer").StopTimer();
+		fadeOutMusic = true;
 	}
 	
 	public void RemoveNest()
@@ -88,4 +109,7 @@ public partial class GameManager : Node2D
 			musicPitch = 1.0f;
 		};
 	}
+
+
+	
 }

@@ -24,7 +24,7 @@ angle_max = 45.0
 scale_min = 0.5
 scale_max = 3.0
 scale_curve = SubResource("CurveTexture_1jh4b")
-color = Color(0.578125, 0.960938, 0.316406, 1)
+color = Color(0.67451, 0.196078, 0.196078, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8rnn3"]
 atlas = ExtResource("1_54rvq")

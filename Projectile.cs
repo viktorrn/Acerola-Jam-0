@@ -8,6 +8,7 @@ public partial class Projectile : CharacterBody2D
 
 	public float Force = 1;
 	public Vector2 ForceDirection;
+	private PackedScene Sparks = GD.Load<PackedScene>("res://Effects/WallHit.tscn");
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -32,6 +33,13 @@ public partial class Projectile : CharacterBody2D
 		}
 		
 		if(collision_data.GetCollider() is TileMap || collision_data.GetCollider() is StaticBody2D){
+			
+			// create sparks
+			GpuParticles2D sparks = (GpuParticles2D)Sparks.Instantiate();
+			sparks.GlobalPosition = GlobalPosition;
+			sparks.Rotation = (float)ForceDirection.Angle() + (float)Math.PI;
+			GetTree().Root.GetNode(Utils.WorldPath).CallDeferred("add_child",sparks);
+			
 			QueueFree();
 		}		
 	}

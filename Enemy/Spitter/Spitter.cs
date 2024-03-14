@@ -71,4 +71,16 @@ public partial class Spitter : Node2D
 	{
 		return (float)Math.PI/4 - GD.Randf()*(float)Math.PI/2;
 	}
+
+	private PackedScene Dead = GD.Load<PackedScene>("res://Enemy/Spitter/DeadSpitter.tscn");
+
+	public void OnDied(Vector2 scale, Vector2 velocity)
+	{
+		Dead dead = (Dead)Dead.Instantiate();
+		dead.Scale = scale;
+		dead.GlobalPosition = GlobalPosition;
+		dead.Velocity = velocity;
+		GetTree().Root.GetNode(Utils.WorldPath).CallDeferred("add_child",dead);
+		QueueFree();
+	}
 }

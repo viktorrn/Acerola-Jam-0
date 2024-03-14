@@ -31,12 +31,12 @@ _data = {
 atlas = ExtResource("2_4dj5l")
 region = Rect2(224, 128, 32, 32)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_04gl8"]
-radius = 6.0
-
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_s2wed"]
 radius = 11.0
 height = 26.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_04gl8"]
+radius = 6.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_a5w0a"]
 radius = 35.0143
@@ -99,21 +99,21 @@ shadow_enabled = true
 texture = ExtResource("3_dxm2r")
 texture_scale = 0.05
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 3)
-shape = SubResource("CircleShape2D_04gl8")
-
-[node name="HurtBox" type="Area2D" parent="."]
+[node name="HurtBox" type="Area2D" parent="Sprite"]
 visible = false
 collision_layer = 128
 collision_mask = 4
 input_pickable = false
 script = ExtResource("3_4kn0g")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/HurtBox"]
 position = Vector2(3, -6)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_s2wed")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("CircleShape2D_04gl8")
 
 [node name="Control" type="Control" parent="."]
 visible = false

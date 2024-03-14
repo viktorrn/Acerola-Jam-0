@@ -11,6 +11,8 @@ public partial class SimpleNest : StaticBody2D
 	[Export] public int MaxAmount = 3;
 	[Export] public int Variant = 0;	
 
+	[Export] public int ammo = 3;
+
 	public bool CanForceSpawn = true;
 	[Export] public int ForceSpawnAmount = 3;
 
@@ -23,6 +25,7 @@ public partial class SimpleNest : StaticBody2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		ammo = MaxAmount * ammo;
 		SpawnLocation.Add(new Vector2(-25,35));
 		SpawnLocation.Add(new Vector2(25,-20));
 		SpawnLocation.Add(new Vector2(-2,-22));
@@ -40,10 +43,12 @@ public partial class SimpleNest : StaticBody2D
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public void CheckToSpawn(){
+		if(ammo <= 0) {timer.Stop(); return;}
 		if(enemies.Count >= MaxAmount) return;
 		int missing = MaxAmount - enemies.Count;
 		for(int i = 0; i < missing; i++){
 			GetTree().CreateTimer(i*SpawnGap).Timeout += SpawnEnemy;
+			ammo--;
 		}
 	}
 
@@ -62,10 +67,10 @@ public partial class SimpleNest : StaticBody2D
 		enemies.Add(enemy);
 		
 		Vector2 direction = GlobalPosition.DirectionTo(GlobalPosition + SpawnLocation[Variant]);
-		direction = direction.Rotated((float)GD.RandRange(-Math.PI / 4, Math.PI / 4));
+		direction = direction.Rotated((float)GD.RandRange(-Math.PI / 2, Math.PI / 2));
 
 		enemy.GlobalPosition = GlobalPosition + SpawnLocation[Variant];
-		enemy.Velocity = direction * GD.RandRange(50, 75);
+		enemy.Velocity = direction * GD.RandRange(75, 120);
 		
 
 		enemy.OnDied += () => { EnemyDied(enemy); };
@@ -78,7 +83,8 @@ public partial class SimpleNest : StaticBody2D
 
 	public void DestoryNest(){
 		timer.Stop();
-		GetNode<Label>("Label").Visible = true;
+		GetNode<Sprite2D>("Sprite2D").Frame += 4;
+
 		GetTree().Root.GetNode<GameManager>("Game").RemoveNest();
 
 	}

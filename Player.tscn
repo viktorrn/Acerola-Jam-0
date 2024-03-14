@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://bbon3jshxdqho"]
+[gd_scene load_steps=27 format=3 uid="uid://bbon3jshxdqho"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_su24c"]
 [ext_resource type="PackedScene" uid="uid://h8iq2lqk820b" path="res://Effects/Shadow.tscn" id="2_5dh7u"]
@@ -7,6 +7,8 @@
 [ext_resource type="Script" path="res://Health.cs" id="3_nl3fk"]
 [ext_resource type="PackedScene" uid="uid://d17icjkl2k0fr" path="res://Effects/Dust.tscn" id="5_jgx67"]
 [ext_resource type="AudioStream" uid="uid://bm12o6aenoes1" path="res://Audio/Death.wav" id="7_pmxdy"]
+[ext_resource type="AudioStream" uid="uid://cll5vo3mg0gax" path="res://Audio/LightStep.wav" id="8_t4shw"]
+[ext_resource type="AudioStream" uid="uid://b8duyi2jgpm6a" path="res://Audio/PlayerHit.wav" id="9_uriau"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dbfla"]
 radius = 16.0
@@ -72,6 +74,7 @@ polygon = PackedVector2Array(-3, 8, 6, 8, 6, -3, -4, -3)
 
 [node name="Player" type="CharacterBody2D"]
 light_mask = 3
+z_index = 1
 collision_layer = 0
 collision_mask = 45
 script = ExtResource("1_su24c")
@@ -366,3 +369,10 @@ theme_override_font_sizes/font_size = 16
 stream = ExtResource("7_pmxdy")
 volume_db = -16.0
 mix_target = 1
+
+[node name="Walk" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("8_t4shw")
+volume_db = -8.0
+
+[node name="PlayerHit" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_uriau")

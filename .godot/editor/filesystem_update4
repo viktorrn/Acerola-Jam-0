@@ -57,3 +57,16 @@ res://Items/Shotgun/Shotgun.tscn
 res://EndScreen.cs
 res://Logo.cs
 res://Effects/Blood.tscn
+res://Effects/Blood.cs
+res://Image.cs
+res://Effects/Fade.tres
+res://Nuke.tscn
+res://NukeBomb.cs
+res://Effects/Sparks.tscn
+res://Effects/Sparks.cs
+res://Effects/WallHit.tscn
+res://Enemy/Charger/DeadCharger.tscn
+res://Enemy/Biter/DeadBiter.tscn
+res://Dead.cs
+res://Enemy/Spitter/DeadSpitter.tscn
+res://sp1.tres

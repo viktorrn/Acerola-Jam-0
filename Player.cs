@@ -46,7 +46,7 @@ public partial class Player : CharacterBody2D
 	private Node2D hand;
 	private Node2D legs;
 	private CharacterBody2D weapon;
-	private Health hurtBox;
+	public Health hurtBox;
 	private Area2D pickUpBox;
 	private Area2D interactionBox;
 
@@ -68,6 +68,8 @@ public partial class Player : CharacterBody2D
 	PackedScene Shotgun = GD.Load<PackedScene>("res://Items/Shotgun/Shotgun.tscn");
 	PackedScene Revolver = GD.Load<PackedScene>("res://Items/Revolver/Revolver.tscn");
 
+	private PackedScene Blood = GD.Load<PackedScene>("res://Effects/Blood.tscn");
+
 	private Area2D AlertArea;
 
 	private int TimePassed = 0;
@@ -82,6 +84,8 @@ public partial class Player : CharacterBody2D
 	private PlayerCamera camera;
 
 	private GameEffects gameEffects;
+
+	private bool IsActive = false;
 
 	private AudioStreamPlayer DeathSound;
 
@@ -415,6 +419,24 @@ public partial class Player : CharacterBody2D
 
 		velocity.Normalized();
 		Velocity = Velocity.Lerp(velocity, (float)deltaTime * Acceleration);
+		if(Velocity.Length() > 90.0f)
+		{
+			if(!GetNode<AudioStreamPlayer2D>("Walk").Playing)
+			{
+				GetNode<AudioStreamPlayer2D>("Walk").PitchScale = 0.4f + (float)GD.RandRange(-0.05,0.1);
+				if(Input.IsActionPressed("Shift"))
+				{
+					GetNode<AudioStreamPlayer2D>("Walk").PitchScale = 1.0f + (float)GD.RandRange(-0.1,0.1);
+				}
+				GetNode<AudioStreamPlayer2D>("Walk").Seek(0);
+				GetNode<AudioStreamPlayer2D>("Walk").Play();
+
+			}
+
+			//StepSound.Seek(0);
+			//StepSound.Play();
+		}
+
 		TimePassed = Velocity.Length() > 90.0f ? TimePassed + 1 : 0;
 		MoveAndSlide();
 		//var collisionData = MoveAndCollide(Velocity);
@@ -557,8 +579,16 @@ public partial class Player : CharacterBody2D
 
 	public void ApplyDamage(Vector2 forceDirection, float force)
 	{
-
+		float angle = forceDirection.Angle();
 		Velocity = forceDirection * force;
+		GpuParticles2D blood = Blood.Instantiate() as GpuParticles2D;
+		blood.Position = GlobalPosition;
+		blood.OneShot = true;
+		blood.Rotation = angle;
+		GetTree().Root.GetNode(Utils.WorldPath).AddChild(blood);
+		GetNode<AudioStreamPlayer>("PlayerHit").Play();
+
+
 	}
 
 	public Vector2 FocusPosition()
